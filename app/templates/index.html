@@ -24,37 +24,39 @@
 
       <div class="table-responsive pt-2 pb-2">
         <table class="table table-striped">
-          <thead>
+          <thead class="text-center">
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Nome</th>
               <th scope="col">Endereço</th>
               <th scope="col">Tipo</th>
+              <th scope="col">Ações</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="text-center">
+            {% for dbs in db %}
             <tr>
-              <th scope="row">1</th>
-              {% if nome == 'Kleber Vasconcelos' %}
-              <td>{{nome}}</td>
-              {% else %}
-              <td>João Neto</td>
-              {% endif %}
-              <td>Otto</td>
-              <td>@mdo</td>
+              <th scope="row">{{dbs.id}}</th>
+              <td>{{dbs.nome}}</td>
+              <td>{{dbs.endereco}}</td>
+              <td>{{dbs.tipo}}</td>
+
+              <td>
+                {% if dbs.tipo == "Horista"%}
+                <a class="btn btn-info text-white">Cartão de ponto</a>
+                {% endif %}
+
+                <a class="btn btn-success" href="/view/{{dbs.id}}/"
+                  >Ver Detalhes</a
+                >
+                <a class="btn btn-warning" href="/edit/{{dbs.id}}"
+                  >Editar Dados</a
+                >
+
+                <a class="btn btn-danger">Excluir</a>
+              </td>
             </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
