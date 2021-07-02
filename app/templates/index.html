@@ -53,7 +53,9 @@
                   >Editar Dados</a
                 >
 
-                <a class="btn btn-danger">Excluir</a>
+                <a class="btn btn-danger btnDel" href="/delete/{{dbs.id}}"
+                  >Excluir</a
+                >
               </td>
             </tr>
             {% endfor %}
@@ -61,5 +63,9 @@
         </table>
       </div>
     </div>
+
+    {% load static %}
+
+    <script src="{% static 'script.js' %}"></script>
   </body>
 </html>
