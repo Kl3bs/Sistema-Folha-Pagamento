@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from app.forms import FuncionarioForm
+from app.forms import FuncionarioForm, PontoForm
 from app.models import Funcionario
 
 # Create your views here.
@@ -44,3 +44,19 @@ def delete(request, pk):
     db = Funcionario.objects.get(pk=pk)
     db.delete()
     return redirect('home')
+
+def ponto(request, pk):
+    data = {}
+    data['db'] = Funcionario.objects.get(pk=pk)
+    data['ponto_form'] = PontoForm(request.POST or None, instance=data['db'] )
+    return render(request, 'ponto_horario.html', data)
+
+
+
+def bater_ponto(request, pk):
+    data = {}
+    data['db'] = Funcionario.objects.get(pk=pk)
+    form = PontoForm(request.POST or None, instance=data['db'] )
+    if form.is_valid(): #VERIFICA SE TUDO É VÁLIDO
+        form.save()  #!SALVA NO BANCO
+        return redirect('home') #*REDIRECIONA PARA A HOME
