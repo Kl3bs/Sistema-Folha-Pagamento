@@ -5,4 +5,4 @@ from django.forms import ModelForm
 class FuncionarioForm(ModelForm):
     class Meta:
         model = Funcionario
-        fields = ['nome', 'endereco', 'tipo']
+        fields = ['nome', 'endereco', 'tipo', 'salario', 'sindicato']

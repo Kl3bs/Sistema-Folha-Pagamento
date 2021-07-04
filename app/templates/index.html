@@ -30,6 +30,8 @@
               <th scope="col">Nome</th>
               <th scope="col">Endereço</th>
               <th scope="col">Tipo</th>
+              <th scope="col">Salário</th>
+              <th scope="col">Pertence ao Sindicato</th>
               <th scope="col">Ações</th>
             </tr>
           </thead>
@@ -40,17 +42,24 @@
               <td>{{dbs.nome}}</td>
               <td>{{dbs.endereco}}</td>
               <td>{{dbs.tipo}}</td>
+              <td>{{dbs.salario}}</td>
+
+              {% if dbs.sindicato %}
+              <td>Sim</td>
+              {% else %}
+              <td>Não</td>
+              {% endif %}
 
               <td>
-                {% if dbs.tipo == "Horista"%}
-                <a class="btn btn-info text-white">Cartão de ponto</a>
+                {% if dbs.tipo == "HORISTA"%}
+                <a class="btn btn-info text-white">Ponto</a>
                 {% endif %}
-
+<!-- 
                 <a class="btn btn-success" href="/view/{{dbs.id}}/"
-                  >Ver Detalhes</a
-                >
+                  >Detalhes</a
+                > -->
                 <a class="btn btn-warning" href="/edit/{{dbs.id}}"
-                  >Editar Dados</a
+                  >Editar</a
                 >
 
                 <a class="btn btn-danger btnDel" href="/delete/{{dbs.id}}"
