@@ -20,7 +20,7 @@ class Funcionario(models.Model):
 
 
 class PontoFuncionario(models.Model):
-    funcionario = models.ForeignKey("Funcionario",
+    funcionario = models.ForeignKey(Funcionario,
                                     on_delete=models.CASCADE,
                                     blank=True,
                                     null=True)

@@ -58,18 +58,16 @@ def delete(request, pk):
 def ponto(request, pk):
     data = {}
     data['db'] = Funcionario.objects.get(pk=pk)
-    data['pontos'] = PontoFuncionario.objects.filter().values()
-    data['ponto_form'] = PontoForm(request.POST or None, instance=data['db'])
+    data['pontos'] = PontoFuncionario.objects.all()
 
+    data['ponto_form'] = PontoForm(request.POST or None, instance=data['db'])
     return render(request, 'ponto_horario.html', data)
 
 
 def bater_ponto(request, pk):
-
-    form = PontoForm(request.POST or None)
+    form = PontoForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
         instance = form.save()
         instance.funcionario_id = pk
         instance.save()
-        #!SALVA NO BANCO
         return redirect('home')  #*REDIRECIONA PARA A HOME
