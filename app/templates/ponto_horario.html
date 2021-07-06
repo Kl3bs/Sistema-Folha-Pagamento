@@ -33,6 +33,7 @@
             <form name="ponto_form" id="ponto_form" method="post"  action="/bater_ponto/{{db.id}}">
               {% csrf_token %} <br />
               {{ponto_form|bootstrap}}
+              <input type="hidden" name="funcionario_id" value="{{ db.id }}" />
               <div class=" text-center">
                 <input type="submit" class="btn btn-primary mt-4" value="Cadastrar Ponto" />
               </div>
@@ -64,8 +65,17 @@
           </div>
         </div>
 
+        aaaaa <br>
 
-        {{ponto_db}}
+        {{pontos}}
+        <br>
+        {{arr.0}}
+
+        <!-- {% if db.id == bd.funcionario_id %} -->
+          {% for ponto in pontos %}
+            <p>{{ponto.id}}</p><br>
+          {% endfor %}
+        <!-- {% endif %} -->
 
     </div>
 
