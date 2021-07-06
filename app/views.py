@@ -58,7 +58,7 @@ def delete(request, pk):
 def ponto(request, pk):
     data = {}
     data['db'] = Funcionario.objects.get(pk=pk)
-    data['pontos'] = PontoFuncionario.objects.all()
+    # data['pontos'] = PontoFuncionario.objects.get()
 
     data['ponto_form'] = PontoForm(request.POST or None, instance=data['db'])
     return render(request, 'ponto_horario.html', data)
@@ -71,3 +71,24 @@ def bater_ponto(request, pk):
         instance.funcionario_id = pk
         instance.save()
         return redirect('home')  #*REDIRECIONA PARA A HOME
+
+def ponto_info(request, pk):
+    # data = {}
+    # data['db'] = Funcionario.objects.get(pk=pk)
+    # tasks= PontoFuncionario.objects.all()
+    # return render(request, 'ponto_info.html', {'tasks' : tasks})
+
+    # data = {}
+    # data['db'] = Funcionario.objects.get(pk=pk)
+    # data['tasks']= PontoFuncionario.objects.all()
+    # return render(request, 'ponto_info.html', {'dados' : data})
+
+    user = Funcionario.objects.get(pk=pk)
+    queryset = PontoFuncionario.objects.all()
+    
+    context = {
+        "user" : user,
+        "object_list" : queryset
+    }
+
+    return render(request, 'ponto_info.html', context)
