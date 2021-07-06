@@ -11,7 +11,7 @@
       crossorigin="anonymous"
     />
     <title>Sistema de Folha de Pagamento</title>
-  </head>
+  </head> 
   <body>
     <div class="container">
       <div class="col-8 pt-2 pb-2">
@@ -22,7 +22,7 @@
         <a href="/form" class="btn btn-success text-center">Adicionar</a>
       </div>
 
-      <div class="table-responsive pt-2 pb-2">
+      <div class="table-responsive pt-2 pb-2" style="font-size: 14px;">
         <table class="table table-striped">
           <thead class="text-center">
             <tr>
@@ -31,6 +31,8 @@
               <th scope="col">Endereço</th>
               <th scope="col">Tipo</th>
               <th scope="col">Salário</th>
+              <th scope="col">Forma de pagamento</th>
+
               <th scope="col">Pertence ao Sindicato</th>
               <th scope="col">Ações</th>
             </tr>
@@ -41,8 +43,14 @@
               <th scope="row">{{dbs.id}}</th>
               <td>{{dbs.nome}}</td>
               <td>{{dbs.endereco}}</td>
+              {% if dbs.tipo == "COMISSIONADO"%}
+              <td>COMISS.</td>
+              {% else %}
               <td>{{dbs.tipo}}</td>
-              <td>{{dbs.salario}}</td>
+              {% endif %}
+              <td>R$: {{dbs.salario}},00</td>
+              <td>{{dbs.forma_pagamento}}</td>
+
 
               {% if dbs.sindicato %}
               <td>Sim</td>
@@ -53,6 +61,10 @@
               <td>
                 {% if dbs.tipo == "HORISTA"%}
                 <a class="btn btn-info text-white" href="/ponto/{{dbs.id}}">Ponto</a>
+                {% endif %}
+
+                {% if dbs.tipo == "COMISSIONADO"%}
+                <a class="btn btn-dark text-white" href="/nova_venda/{{dbs.id}}">Venda</a>
                 {% endif %}
 <!-- 
                 <a class="btn btn-success" href="/view/{{dbs.id}}/"

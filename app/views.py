@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from app.forms import FuncionarioForm, PontoForm
+from app.forms import FuncionarioForm, PontoForm, VendaForm
 from app.models import Funcionario, PontoFuncionario
 
 
@@ -92,3 +92,9 @@ def ponto_info(request, pk):
     }
 
     return render(request, 'ponto_info.html', context)
+
+def nova_venda(request,pk):
+    data = {}
+    data['db'] = Funcionario.objects.get(pk=pk)
+    data['form'] = VendaForm()
+    return render(request, data)

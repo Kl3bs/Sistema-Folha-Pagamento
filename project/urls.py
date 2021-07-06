@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import bater_ponto, home, form, create, view, edit, update, delete, ponto, ponto_info
+from app.views import bater_ponto, home, form, create, view, edit, update, delete, ponto, ponto_info, nova_venda
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +29,9 @@ urlpatterns = [
     path('ponto/<int:pk>', ponto, name='ponto'), #Recebe a pimary key como parametro na url
     path('bater_ponto/<int:pk>', bater_ponto, name='bater_ponto'), #Recebe a pimary key como parametro na url
 
-    path('ponto_info/<int:pk>', ponto_info, name='ponto_info'), #Recebe a pimary key como parametro na url
+    path('ponto_info/<int:pk>', ponto_info, name='ponto_info'), #Rezebe a pimary key como parametro na url
+    path('nova_venda/<int:pk>', nova_venda, name='nova_venda'),
+
 
 
     
