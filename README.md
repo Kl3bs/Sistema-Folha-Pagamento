@@ -38,3 +38,6 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
+
+Acesse o endereço localhost:8000, para ver o projeto no browser.
+
