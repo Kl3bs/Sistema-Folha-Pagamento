@@ -8,7 +8,10 @@ from django.forms import ModelForm
 class FuncionarioForm(ModelForm):
     class Meta:
         model = Funcionario
-        fields = ['nome', 'endereco', 'tipo', 'salario', 'sindicato', 'forma_pagamento']
+        fields = [
+            'nome', 'endereco', 'tipo', 'salario', 'sindicato',
+            'forma_pagamento', 'comissao'
+        ]
 
 
 class PontoForm(ModelForm):
@@ -16,12 +19,8 @@ class PontoForm(ModelForm):
         model = PontoFuncionario
         fields = ['hora_entrada', 'hora_saida', 'data_ponto']
 
+
 class VendaForm(ModelForm):
     class Meta:
         model = Venda
-        fields = [
-            'nome_item',
-            'descricao_item',
-            'data_venda',
-            'valor_venda'
-        ]
+        fields = ['nome_item', 'descricao_item', 'data_venda', 'valor_venda']

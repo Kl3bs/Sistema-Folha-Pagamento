@@ -15,24 +15,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import bater_ponto, home, form, create, view, edit, update, delete, ponto, ponto_info, nova_venda
+from app.views import bater_ponto, home, form, create, listar_vendas, view, edit, update, delete, ponto, ponto_info, nova_venda, vendas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
+
+    #*USER PATHS
     path('form/', form, name='form'),
     path('create/', create, name='create'),
-    path('view/<int:pk>/', view, name='view'), #Recebe a pimary key como parametro na url
-    path('edit/<int:pk>/', edit, name='edit'), #Recebe a pimary key como parametro na url
-    path('update/<int:pk>', update, name='update'), #Recebe a pimary key como parametro na url
-    path('delete/<int:pk>', delete, name='delete'), #Recebe a pimary key como parametro na url
-    path('ponto/<int:pk>', ponto, name='ponto'), #Recebe a pimary key como parametro na url
-    path('bater_ponto/<int:pk>', bater_ponto, name='bater_ponto'), #Recebe a pimary key como parametro na url
+    path('view/<int:pk>/', view, name='view'),
+    path('edit/<int:pk>/', edit, name='edit'),
+    path('update/<int:pk>', update, name='update'),
+    path('delete/<int:pk>', delete, name='delete'),
 
-    path('ponto_info/<int:pk>', ponto_info, name='ponto_info'), #Rezebe a pimary key como parametro na url
+    #*PONTO PATHS
+    path('ponto/<int:pk>', ponto, name='ponto'),
+    path('bater_ponto/<int:pk>', bater_ponto, name='bater_ponto'),
+    path('ponto_info/<int:pk>', ponto_info, name='ponto_info'),
+
+    #*VENDAS PATHS
+    path('vendas/<int:pk>', vendas, name='vendas'),
     path('nova_venda/<int:pk>', nova_venda, name='nova_venda'),
-
-
-
-    
+    path('listar_vendas/<int:pk>', listar_vendas, name='listar_vendas'),
 ]
