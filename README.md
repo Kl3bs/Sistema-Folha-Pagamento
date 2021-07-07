@@ -11,11 +11,17 @@ python -m venv venv
 ```
 
 
-## Ativando sua venv
+## Ativando sua venv (Windows)
 
-Para ativar sua venv use:
- Windows: cd/venv/Scripts, em seguida basta digitar o comando "./activate" (Sem aspas);
- MacOS: source venv/bin/activate
+Navegue até /venv/Scripts, em seguida basta digitar o comando "./activate" (Sem aspas);
+ 
+## Ativando sua venv (MacOS)
+
+Na raiz do projeto, digite: 
+
+```sh
+source venv/bin/activate
+```
  
 ## Instalando o django
 
