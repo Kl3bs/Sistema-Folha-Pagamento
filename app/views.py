@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from app.forms import FuncionarioForm, PontoForm, VendaForm
 from app.models import Funcionario, PontoFuncionario, Venda
+from django.db.models import Sum
 
 
 # Create your views here.
@@ -16,7 +17,7 @@ def home(request):
 def form(request):
     data = {}
     data['form'] = FuncionarioForm()
-    return render(request, 'form.html', data)
+    return render(request, 'user/form.html', data)
 
 
 def create(request):
@@ -108,7 +109,15 @@ def listar_vendas(request, pk):
     user = Funcionario.objects.get(pk=pk)
     queryset = Venda.objects.all()
 
-    context = {"user": user, "object_list": queryset}
+    valor_produto = Venda.objects.aggregate(Sum('valor_venda'))
+    saldo = user.comissao * 10
+
+    context = {
+        "user": user,
+        "object_list": queryset,
+        "saldo": saldo,
+        "val": valor_produto
+    }
 
     return render(request, 'vendas/listar_vendas.html', context)
 
