@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from app.forms import FuncionarioForm, PontoForm, VendaForm
 from app.models import Funcionario, PontoFuncionario, Venda
 from django.db.models import Sum
+from django.db.models import F
 
 
 # Create your views here.
@@ -83,7 +84,8 @@ def bater_ponto(request, pk):
 def ponto_info(request, pk):
     user = Funcionario.objects.get(pk=pk)
     queryset = PontoFuncionario.objects.all()
-    context = {"user": user, "object_list": queryset}
+    time1 = PontoFuncionario.objects.values('hora_entrada')
+    context = {"user": user, "object_list": queryset, "time1": time1}
 
     return render(request, 'ponto/ponto_info.html', context)
 
@@ -117,7 +119,6 @@ def listar_vendas(request, pk):
     context = {
         "user": user,
         "object_list": queryset,
-        # "saldo": saldo,
         "total_comissao": total_comissao
     }
 
