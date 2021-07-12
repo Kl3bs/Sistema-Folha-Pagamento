@@ -109,19 +109,16 @@ def listar_vendas(request, pk):
     user = Funcionario.objects.get(pk=pk)
     queryset = Venda.objects.all()
 
-    valor_produto = Venda.objects.aggregate(Sum('valor_venda'))
-    saldo = user.comissao * 10
+    #* SOMA TODOS AS VENDAS DO FUNCIONARIO, MULTIPLICA PELA TAXA DE COMISSAO E RETORNA O RESULTADO
+    total_comissao = list(
+        Venda.objects.filter(funcionario_id__exact=pk).aggregate(
+            Sum('valor_venda')).values())[0] * (user.comissao / 100)
 
     context = {
         "user": user,
         "object_list": queryset,
-        "saldo": saldo,
-        "val": valor_produto
+        # "saldo": saldo,
+        "total_comissao": total_comissao
     }
 
     return render(request, 'vendas/listar_vendas.html', context)
-
-
-# def venda_info(request,pk):
-#     user = Funcionario.objects.get(pk=pk)
-#     queryset = PontoFuncionario.objects.all()
