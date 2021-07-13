@@ -3,7 +3,7 @@
 
 ## Installation (Venv)
 
-Esta aplicação necessita que Python esteja instalado em sua máquina.
+Esta aplicação necessita que o Python esteja instalado em sua máquina.
 
 Após clonar o projeto, navegue até a pasta dele e abra a pasta raiz do projeto com o terminal e digite o comando a seguir:
 ```sh
