@@ -2,73 +2,78 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrada/Saída</title>
-    <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-    crossorigin="anonymous"
-  />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrada/Saída</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
+
 <body>
-    <div class="container">
-        <div class="row ">
-            <div class="pt-4 text-center">
-                <h1>Controle de Ponto</h1>
-                <h2>{{user.nome}}</h2>
-                <br>
-                <a href="/" class="btn btn-warning">Voltar</a>
-                
-            </div>
-        </div>
+  <div class="container">
+    <div class="row ">
+      <div class="pt-4 text-center">
+        <h1>Controle de Ponto</h1>
+        <h2>{{user.nome}}</h2>
+        <br>
+        <a href="/" class="btn btn-warning">Voltar</a>
 
-        <div class="row justify-content-center ">
-          <div class="col-sm-6">
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="table-responsive pt-2 pb-2">
-
-            <!-- {{dados.db.id}} <br> -->
-
-            <table class="table table-striped">
-                <thead class="text-center">
-                  <tr>
-                    <th scope="col">Id (Ponto)</th>
-                    <th scope="col">Data de Registro</th>
-                    <th scope="col">Hora de Entrada</th>
-                    <th scope="col">Hora de Saída</th>
-  
-                  </tr>
-                </thead>
-                <tbody class="text-center">
-
-                  {% for obj in object_list %}
-                  <tr>
-                    {% if user.id == obj.funcionario_id %}
-                      <th scope="row">{{obj.id}}</th>
-                      <td>{{obj.data_ponto}}</td>
-                      <td>{{obj.hora_entrada}}</td>
-                      <td>{{obj.hora_saida}}</td>
-                    {% endif %}
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
+      </div>
     </div>
 
-     
-
+    <div class="row justify-content-center ">
+      <div class="col-sm-6">
+      </div>
     </div>
+
+    <div class="row">
+      <div class="table-responsive pt-2 pb-2">
+
+        <!-- {{dados.db.id}} <br> -->
+
+        <table class="table table-striped">
+          <thead class="text-center">
+            <tr>
+              <th scope="col">Id (Ponto)</th>
+              <th scope="col">Data de Registro</th>
+              <th scope="col">Hora de Entrada</th>
+              <th scope="col">Hora de Saída</th>
+              <th scope="col">Ação</th>
+
+            </tr>
+          </thead>
+          <tbody class="text-center">
+
+            {% for obj in object_list %}
+            <tr>
+              {% if user.id == obj.funcionario_id %}
+              <th scope="row">{{obj.id}}</th>
+              <td>{{obj.data_ponto}}</td>
+              <td>{{obj.hora_entrada}}</td>
+              <td>{{obj.hora_saida}}</td>
+              <td><button class="btn btn-danger">Excluir</button></td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  </div>
 </body>
+
 </html>

@@ -8,7 +8,7 @@ class Funcionario(models.Model):
     nome = models.CharField(max_length=35)
     endereco = models.CharField(max_length=40)
     tipo_prof = models.TextChoices('"Selecionar"',
-                                   'HORISTA MENSALISTA COMISSIONADO')
+                                   "HORISTA MENSALISTA COMISSIONADO")
     tipo = models.CharField(blank=True,
                             choices=tipo_prof.choices,
                             max_length=12)
@@ -19,7 +19,7 @@ class Funcionario(models.Model):
     sindicato = models.BooleanField(null=True)
 
     tipo_pagamento = models.TextChoices('"Selecionar"',
-                                        'CHEQUE CHEQUE-CORREIOS DEPOSITO')
+                                        "CHEQUE CHEQUE-CORREIOS DEPOSITO")
     forma_pagamento = models.CharField(blank=True,
                                        choices=tipo_pagamento.choices,
                                        max_length=20)
@@ -37,6 +37,7 @@ class PontoFuncionario(models.Model):
     data_ponto = models.DateField(null=True)
     hora_entrada = models.TimeField(null=True)
     hora_saida = models.TimeField(null=True)
+    ativo = models.BooleanField(null=True)
 
 
 class Venda(models.Model):
