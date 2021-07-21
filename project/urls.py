@@ -15,26 +15,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import bater_ponto, home, form, create, listar_vendas, view, edit, update, delete, ponto, ponto_info, nova_venda, vendas
+from app.views import bater_ponto, desativar, home, form, create, listar_vendas, reativar, view, edit, update, delete, ponto, ponto_info, nova_venda, vendas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
 
-    #*USER PATHS
+    #*FUNCIONARIO
     path('form/', form, name='form'),
     path('create/', create, name='create'),
     path('view/<int:pk>/', view, name='view'),
     path('edit/<int:pk>/', edit, name='edit'),
     path('update/<int:pk>', update, name='update'),
     path('delete/<int:pk>', delete, name='delete'),
+    path('desativar/<int:pk>', desativar, name='desativar'),
+    path('reativar/<int:pk>', reativar, name='reativar'),
 
-    #*PONTO PATHS
+
+    #*PONTO 
     path('ponto/<int:pk>', ponto, name='ponto'),
     path('bater_ponto/<int:pk>', bater_ponto, name='bater_ponto'),
     path('ponto_info/<int:pk>', ponto_info, name='ponto_info'),
 
-    #*VENDAS PATHS
+    #*VENDAS 
     path('vendas/<int:pk>', vendas, name='vendas'),
     path('nova_venda/<int:pk>', nova_venda, name='nova_venda'),
     path('listar_vendas/<int:pk>', listar_vendas, name='listar_vendas'),

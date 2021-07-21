@@ -11,9 +11,9 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="col-8 pt-2 pb-2">
-      <h1>Sistema de Folha de Pagamento</h1>
+  <div class="container" style="padding: 50px 0;">
+    <div class="row text-center">
+      <h2>Sistema de Folha de Pagamento</h2>
     </div>
 
     <div class="col-8 pt-2 pb-2">
@@ -29,7 +29,7 @@
             <th scope="col">Endereço</th>
             <th scope="col">Tipo</th>
             <th scope="col">Salário</th>
-            <th scope="col">Comissão</th>
+            <!-- <th scope="col">Comissão</th> -->
 
             <th scope="col">Pertence ao Sindicato</th>
             <th scope="col">Forma de pagamento</th>
@@ -39,6 +39,8 @@
         </thead>
         <tbody class="text-center">
           {% for dbs in db %}
+          {% if dbs.is_active %}
+
           <tr>
             <th scope="row">{{dbs.id}}</th>
             <td>{{dbs.nome}}</td>
@@ -50,15 +52,17 @@
             {% endif %}
             <td>R$: {{dbs.salario}},00</td>
 
-            {% if dbs.tipo == "COMISSIONADO"%}
+            <!-- {% if dbs.tipo == "COMISSIONADO"%}
             <td>{{dbs.comissao}}%</td>
             {% else %}
             <td>0</td>
-            {% endif %} {% if dbs.sindicato %}
+            {% endif %} -->
+            {% if dbs.sindicato %}
             <td>Sim</td>
             {% else %}
             <td>Não</td>
             {% endif %}
+
 
             <td>{{dbs.forma_pagamento}}</td>
 
@@ -72,11 +76,89 @@
                 <a class="btn btn-success" href="/view/{{dbs.id}}/"
                   >Detalhes</a
                 > -->
-              <a class="btn btn-warning" href="/edit/{{dbs.id}}">Editar</a>
+              <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a>
+
+              <a class="btn btn-warning" href="/desativar/{{dbs.id}}">Apagar</a>
+
+              <!-- <a class="btn btn-danger btnDel" href="/delete/{{dbs.id}}">Excluir</a> -->
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <br>
+
+    <div class="row text-center">
+      <h2>Funcionários Desativados</h2>
+    </div>
+
+    <div class="table-responsive pt-2 pb-2" style="font-size: 14px">
+      <table class="table table-striped">
+        <thead class="text-center">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Endereço</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Salário</th>
+            <!-- <th scope="col">Comissão</th> -->
+
+            <th scope="col">Pertence ao Sindicato</th>
+            <th scope="col">Forma de pagamento</th>
+
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          {% for dbs in db %}
+          {% if dbs.is_active == False %}
+
+          <tr>
+            <th scope="row">{{dbs.id}}</th>
+            <td>{{dbs.nome}}</td>
+            <td>{{dbs.endereco}}</td>
+            {% if dbs.tipo == "COMISSIONADO"%}
+            <td>COMISS.</td>
+            {% else %}
+            <td>{{dbs.tipo}}</td>
+            {% endif %}
+            <td>R$: {{dbs.salario}},00</td>
+
+            <!-- {% if dbs.tipo == "COMISSIONADO"%}
+            <td>{{dbs.comissao}}%</td>
+            {% else %}
+            <td>0</td>
+            {% endif %} -->
+            {% if dbs.sindicato %}
+            <td>Sim</td>
+            {% else %}
+            <td>Não</td>
+            {% endif %}
+
+
+            <td>{{dbs.forma_pagamento}}</td>
+
+            <td>
+              <!-- {% if dbs.tipo == "HORISTA"%}
+              <a class="btn btn-info text-white" href="/ponto/{{dbs.id}}">Ponto</a>
+              {% endif %} {% if dbs.tipo == "COMISSIONADO"%}
+              <a class="btn btn-dark text-white" href="/vendas/{{dbs.id}}">Venda</a>
+              {% endif %} -->
+              <!-- 
+                <a class="btn btn-success" href="/view/{{dbs.id}}/"
+                  >Detalhes</a
+                > -->
+              <!-- <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a> -->
+
+              <a class="btn btn-warning" href="/reativar/{{dbs.id}}">Reativar</a>
 
               <a class="btn btn-danger btnDel" href="/delete/{{dbs.id}}">Excluir</a>
             </td>
           </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>

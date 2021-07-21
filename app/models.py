@@ -27,6 +27,7 @@ class Funcionario(models.Model):
     comissao = models.IntegerField(
         default=1, validators=[MinValueValidator(1),
                                MaxValueValidator(100)])
+    is_active = models.BooleanField(null=True)
 
 
 class PontoFuncionario(models.Model):

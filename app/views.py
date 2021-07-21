@@ -62,6 +62,14 @@ def delete(request, pk):
 
     return redirect('home')
 
+def desativar(request,pk):
+    Funcionario.objects.filter(pk=pk).update(is_active=False)
+    return redirect('home')
+
+def reativar(request,pk):
+    Funcionario.objects.filter(pk=pk).update(is_active=True)
+    return redirect('home')
+
 
 def ponto(request, pk):
     data = {}
