@@ -24,7 +24,9 @@ def form(request):
 def create(request):
     form = FuncionarioForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
-        form.save()  #!SALVA NO BANCO
+        instance = form.save()
+        instance.is_active = True
+        instance.save()  #!SALVA NO BANCO
 
         return redirect('home')  #*REDIRECIONA PARA A HOME
 
@@ -62,11 +64,13 @@ def delete(request, pk):
 
     return redirect('home')
 
-def desativar(request,pk):
+
+def desativar(request, pk):
     Funcionario.objects.filter(pk=pk).update(is_active=False)
     return redirect('home')
 
-def reativar(request,pk):
+
+def reativar(request, pk):
     Funcionario.objects.filter(pk=pk).update(is_active=True)
     return redirect('home')
 
@@ -83,9 +87,9 @@ def bater_ponto(request, pk):
     form = PontoForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
         instance = form.save()
+        instance.is_active = True
         instance.funcionario_id = pk
         instance.save()
-
         return redirect('home')  #*REDIRECIONA PARA A HOME
 
 
@@ -131,3 +135,21 @@ def listar_vendas(request, pk):
     }
 
     return render(request, 'vendas/listar_vendas.html', context)
+
+
+def desativar_ponto(request, funcionario_id, pk):
+    PontoFuncionario.objects.filter(pk=pk).update(is_active=False)
+    return ponto_info(request, funcionario_id)
+
+
+def reativar_ponto(request, funcionario_id, pk):
+    PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
+    return ponto_info(request, funcionario_id)
+
+
+def deletar_ponto(request, funcionario_id, pk):
+    ponto = PontoFuncionario.objects.get(pk=pk)
+    ponto.delete()
+
+    return ponto_info(request, funcionario_id)
+    #return render(request, 'ponto/ponto_info.html', funcionario)

@@ -1,3 +1,4 @@
+from project.settings import DATE_INPUT_FORMATS
 from django.db import models
 from django.db.models import fields
 from app.models import Funcionario, PontoFuncionario, Venda

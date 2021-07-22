@@ -29,7 +29,6 @@
 
       </div>
     </div>
-<<<<<<< HEAD
 
     <div class="row justify-content-center ">
       <div class="col-sm-6">
@@ -38,9 +37,6 @@
 
     <div class="row">
       <div class="table-responsive pt-2 pb-2">
-
-        <!-- {{dados.db.id}} <br> -->
-
         <table class="table table-striped">
           <thead class="text-center">
             <tr>
@@ -48,66 +44,73 @@
               <th scope="col">Data de Registro</th>
               <th scope="col">Hora de Entrada</th>
               <th scope="col">Hora de Saída</th>
-              <th scope="col">Ação</th>
+              <th scope="col">Ações</th>
+              <!-- <th scope="col">Total a receber</th> -->
 
             </tr>
           </thead>
           <tbody class="text-center">
 
             {% for obj in object_list %}
-            <tr>
-              {% if user.id == obj.funcionario_id %}
-              <th scope="row">{{obj.id}}</th>
-              <td>{{obj.data_ponto}}</td>
-              <td>{{obj.hora_entrada}}</td>
-              <td>{{obj.hora_saida}}</td>
-              <td><button class="btn btn-danger">Excluir</button></td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-
-=======
-
-    <div class="row justify-content-center ">
-      <div class="col-sm-6">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="table-responsive pt-2 pb-2">
-
-        <!-- {{dados.db.id}} <br> -->
-
-        <table class="table table-striped">
-          <thead class="text-center">
-            <tr>
-              <th scope="col">Id (Ponto)</th>
-              <th scope="col">Data de Registro</th>
-              <th scope="col">Hora de Entrada</th>
-              <th scope="col">Hora de Saída</th>
-              <th scope="col">Total a receber</th>
-
-            </tr>
-          </thead>
-          <tbody class="text-center">
-
-            {% for obj in object_list %}
+            {% if obj.is_active == True %}
             <tr>
               {% if user.id == obj.funcionario_id %}
               <th scope="row">{{obj.id}}</th>
               <td>{{obj.data_ponto|date:"d/m/Y"}}</td>
               <td>{{obj.hora_entrada|date:"G:i"}}</td>
               <td>{{obj.hora_saida|date:"G:i"}}</td>
-              <td>X</td>
+              <td><a class="btn btn-warning" href="/desativar_ponto/{{user.id}}/{{obj.id}}">Apagar</a></td>
+              <!-- <td> <a class="btn btn-danger" href="/deletar_ponto/{{user.id}}/{{obj.id}}">Deletar</a></td> -->
+              <!-- <td>X</td> -->
 
               {% endif %}
             </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row text-center">
+      <h3 class="">Pontos Excluídos</h3>
+    </div>
+
+    <div class="row">
+      <div class="table-responsive pt-2 pb-2">
+        <table class="table table-striped">
+          <thead class="text-center">
+            <tr>
+              <th scope="col">Id (Ponto)</th>
+              <th scope="col">Data de Registro</th>
+              <th scope="col">Hora de Entrada</th>
+              <th scope="col">Hora de Saída</th>
+              <th scope="col">Ações</th>
+              <!-- <th scope="col">Total a receber</th> -->
+
+            </tr>
+          </thead>
+          <tbody class="text-center">
+
+            {% for obj in object_list %}
+            {% if obj.is_active == False %}
+            <tr>
+              {% if user.id == obj.funcionario_id %}
+              <th scope="row">{{obj.id}}</th>
+              <td>{{obj.data_ponto|date:"d/m/Y"}}</td>
+              <td>{{obj.hora_entrada|date:"G:i"}}</td>
+              <td>{{obj.hora_saida|date:"G:i"}}</td>
+              <td>
+                <a class="btn btn-success" href="/reativar_ponto/{{user.id}}/{{obj.id}}">Desfazer Exclusão</a>
+                <a class="btn btn-danger" href="/deletar_ponto/{{user.id}}/{{obj.id}}">Deletar</a>
+              </td>
+              <!-- <td>X</td> -->
+
+              {% endif %}
+            </tr>
+            {% endif %}
             {% endfor %}
           </tbody>
         </table>
@@ -115,15 +118,14 @@
     </div>
 
   </div>
-
+  <!-- 
   {% for t in time1 %}
 
   {{t.hora_entrada|date:"G:i"}}
   <br>
 
-  {% endfor %}
+  {% endfor %} -->
 
->>>>>>> 93f430d051966859328103ab4ad17608b5d085bf
 
 
   </div>

@@ -39,7 +39,7 @@
         </thead>
         <tbody class="text-center">
           {% for dbs in db %}
-          {% if dbs.is_active %}
+          {% if dbs.is_active == True %}
 
           <tr>
             <th scope="row">{{dbs.id}}</th>
@@ -153,7 +153,7 @@
                 > -->
               <!-- <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a> -->
 
-              <a class="btn btn-warning" href="/reativar/{{dbs.id}}">Reativar</a>
+              <a class="btn btn-success" href="/reativar/{{dbs.id}}">Reativar</a>
 
               <a class="btn btn-danger btnDel" href="/delete/{{dbs.id}}">Excluir</a>
             </td>

@@ -39,6 +39,7 @@ class PontoFuncionario(models.Model):
     hora_entrada = models.TimeField(null=True)
     hora_saida = models.TimeField(null=True)
     pagamento = models.IntegerField(null=True)
+    is_active = models.BooleanField(null=True)
 
 
 class Venda(models.Model):
