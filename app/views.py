@@ -102,7 +102,15 @@ def bater_ponto(request, pk):
         hora_entrada = int((instance.hora_entrada).strftime("%H"))
         hora_saida = int((instance.hora_saida).strftime("%H"))
         instance.horas_trabalhadas = (hora_saida - hora_entrada)
-        user.total_a_receber += (user.salario * instance.horas_trabalhadas)
+
+        #CALCULA O VALOR A RECEBER ()
+        if instance.horas_trabalhadas > 8:
+            #CALCULA O BONUS DE 1.5x
+            excedente =  (instance.horas_trabalhadas - 8)
+            bonus = (excedente * 1.5) * 10 
+            user.total_a_receber = (user.salario * 8) + bonus
+        else:
+            user.total_a_receber += (user.salario * instance.horas_trabalhadas)
 
         Funcionario.objects.filter(pk=pk).update(
             total_a_receber=user.total_a_receber)
