@@ -33,6 +33,7 @@
 
             <th scope="col">Pertence ao Sindicato</th>
             <th scope="col">Forma de pagamento</th>
+            <th scope="col">Total a Receber</th>
 
             <th scope="col">Ações</th>
           </tr>
@@ -65,6 +66,8 @@
 
 
             <td>{{dbs.forma_pagamento}}</td>
+
+            <td>R$:{{dbs.total_a_receber}}</td>
 
             <td>
               {% if dbs.tipo == "HORISTA"%}
@@ -127,11 +130,7 @@
             {% endif %}
             <td>R$: {{dbs.salario}},00</td>
 
-            <!-- {% if dbs.tipo == "COMISSIONADO"%}
-            <td>{{dbs.comissao}}%</td>
-            {% else %}
-            <td>0</td>
-            {% endif %} -->
+
             {% if dbs.sindicato %}
             <td>Sim</td>
             {% else %}
@@ -142,16 +141,6 @@
             <td>{{dbs.forma_pagamento}}</td>
 
             <td>
-              <!-- {% if dbs.tipo == "HORISTA"%}
-              <a class="btn btn-info text-white" href="/ponto/{{dbs.id}}">Ponto</a>
-              {% endif %} {% if dbs.tipo == "COMISSIONADO"%}
-              <a class="btn btn-dark text-white" href="/vendas/{{dbs.id}}">Venda</a>
-              {% endif %} -->
-              <!-- 
-                <a class="btn btn-success" href="/view/{{dbs.id}}/"
-                  >Detalhes</a
-                > -->
-              <!-- <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a> -->
 
               <a class="btn btn-success" href="/reativar/{{dbs.id}}">Reativar</a>
 

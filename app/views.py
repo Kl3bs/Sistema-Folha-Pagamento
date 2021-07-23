@@ -4,6 +4,7 @@ from app.forms import FuncionarioForm, PontoForm, VendaForm
 from app.models import Funcionario, PontoFuncionario, Venda
 from django.db.models import Sum
 from django.db.models import F
+from datetime import datetime
 
 
 # Create your views here.
@@ -26,6 +27,12 @@ def create(request):
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
         instance = form.save()
         instance.is_active = True
+
+        if instance.tipo == "MENSALISTA":
+            instance.total_a_receber = instance.salario
+        else:
+            instance.total_a_receber = 0
+
         instance.save()  #!SALVA NO BANCO
 
         return redirect('home')  #*REDIRECIONA PARA A HOME
@@ -84,12 +91,24 @@ def ponto(request, pk):
 
 
 def bater_ponto(request, pk):
+
+    user = Funcionario.objects.get(pk=pk)
     form = PontoForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
         instance = form.save()
         instance.is_active = True
         instance.funcionario_id = pk
+
+        hora_entrada = int((instance.hora_entrada).strftime("%H"))
+        hora_saida = int((instance.hora_saida).strftime("%H"))
+        instance.horas_trabalhadas = (hora_saida - hora_entrada)
+        user.total_a_receber += (user.salario * instance.horas_trabalhadas)
+
+        Funcionario.objects.filter(pk=pk).update(
+            total_a_receber=user.total_a_receber)
+
         instance.save()
+
         return redirect('home')  #*REDIRECIONA PARA A HOME
 
 
@@ -97,7 +116,16 @@ def ponto_info(request, pk):
     user = Funcionario.objects.get(pk=pk)
     queryset = PontoFuncionario.objects.all()
     time1 = PontoFuncionario.objects.values('hora_entrada')
-    context = {"user": user, "object_list": queryset, "time1": time1}
+
+    horas_trabalhadas = PontoFuncionario.objects.filter(
+        funcionario_id__exact=pk).values_list()
+
+    context = {
+        "user": user,
+        "object_list": queryset,
+        "time1": time1,
+        "horas_trabalhadas": horas_trabalhadas
+    }
 
     return render(request, 'ponto/ponto_info.html', context)
 

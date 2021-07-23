@@ -44,6 +44,7 @@
               <th scope="col">Data de Registro</th>
               <th scope="col">Hora de Entrada</th>
               <th scope="col">Hora de Saída</th>
+
               <th scope="col">Ações</th>
               <!-- <th scope="col">Total a receber</th> -->
 
@@ -59,6 +60,7 @@
               <td>{{obj.data_ponto|date:"d/m/Y"}}</td>
               <td>{{obj.hora_entrada|date:"G:i"}}</td>
               <td>{{obj.hora_saida|date:"G:i"}}</td>
+
               <td><a class="btn btn-warning" href="/desativar_ponto/{{user.id}}/{{obj.id}}">Apagar</a></td>
               <!-- <td> <a class="btn btn-danger" href="/deletar_ponto/{{user.id}}/{{obj.id}}">Deletar</a></td> -->
               <!-- <td>X</td> -->

@@ -13,20 +13,23 @@ class Funcionario(models.Model):
                             choices=tipo_prof.choices,
                             max_length=12)
     salario = models.IntegerField(
-        default=1,
-        validators=[MinValueValidator(1),
+        default=0,
+        validators=[MinValueValidator(0),
                     MaxValueValidator(999999)])
     sindicato = models.BooleanField(null=True)
 
     tipo_pagamento = models.TextChoices('"Selecionar"',
                                         "CHEQUE CHEQUE-CORREIOS DEPOSITO")
-    forma_pagamento = models.CharField(blank=True,
+    forma_pagamento = models.CharField(blank=False,
                                        choices=tipo_pagamento.choices,
                                        max_length=20)
 
     comissao = models.IntegerField(
-        default=1, validators=[MinValueValidator(1),
+        default=0, validators=[MinValueValidator(0),
                                MaxValueValidator(100)])
+
+    total_a_receber = models.IntegerField(null=True)
+
     is_active = models.BooleanField(null=True)
 
 
@@ -38,7 +41,7 @@ class PontoFuncionario(models.Model):
     data_ponto = models.DateField(null=True)
     hora_entrada = models.TimeField(null=True)
     hora_saida = models.TimeField(null=True)
-    pagamento = models.IntegerField(null=True)
+    horas_trabalhadas = models.IntegerField(null=True)
     is_active = models.BooleanField(null=True)
 
 
