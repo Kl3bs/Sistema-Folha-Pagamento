@@ -103,17 +103,7 @@ def bater_ponto(request, pk):
         hora_saida = int((instance.hora_saida).strftime("%H"))
         instance.horas_trabalhadas = (hora_saida - hora_entrada)
 
-        #CALCULA O VALOR A RECEBER ()
-        if instance.horas_trabalhadas > 8:
-            #CALCULA O BONUS DE 1.5x
-            excedente =  (instance.horas_trabalhadas - 8)
-            bonus = (excedente * 1.5) * 10 
-            user.total_a_receber = (user.salario * 8) + bonus
-        else:
-            user.total_a_receber += (user.salario * instance.horas_trabalhadas)
-
-        Funcionario.objects.filter(pk=pk).update(
-            total_a_receber=user.total_a_receber)
+        inserir_pagamento_hora(instance, pk)
 
         instance.save()
 
@@ -173,12 +163,47 @@ def listar_vendas(request, pk):
     return render(request, 'vendas/listar_vendas.html', context)
 
 
+def inserir_pagamento_hora(instance, pk):
+    user = Funcionario.objects.get(pk=pk)
+
+    #CALCULA O VALOR A RECEBER ()
+    if instance.horas_trabalhadas > 8:
+        #CALCULA O BONUS DE 1.5x
+        excedente =  (instance.horas_trabalhadas - 8)
+        bonus = (excedente * 1.5) * 10 
+        user.total_a_receber += (user.salario * 8) + bonus
+    else:
+        user.total_a_receber += (user.salario * instance.horas_trabalhadas)
+
+    Funcionario.objects.filter(pk=pk).update(
+        total_a_receber=user.total_a_receber)
+
+
+def remover_pagamento_hora(funcionario_id,pk):
+    instance = PontoFuncionario.objects.get(pk=pk)
+    user = Funcionario.objects.get(pk=funcionario_id)
+
+    if instance.horas_trabalhadas > 8:
+        #CALCULA O BONUS DE 1.5x
+        excedente =  (instance.horas_trabalhadas - 8)
+        bonus = (excedente * 1.5) * 10 
+        user.total_a_receber -= (user.salario * 8) + bonus
+    else:
+        user.total_a_receber -= (user.salario * instance.horas_trabalhadas)
+
+    result = user.total_a_receber
+    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=result)
+
+
 def desativar_ponto(request, funcionario_id, pk):
+    remover_pagamento_hora(funcionario_id,pk)
     PontoFuncionario.objects.filter(pk=pk).update(is_active=False)
     return ponto_info(request, funcionario_id)
 
 
-def reativar_ponto(request, funcionario_id, pk):
+def reativar_ponto(request, funcionario_id, pk): 
+    instance = PontoFuncionario.objects.get(pk=pk)
+    inserir_pagamento_hora(instance,funcionario_id)
     PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
     return ponto_info(request, funcionario_id)
 
