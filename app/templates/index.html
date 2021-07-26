@@ -13,11 +13,16 @@
 <body>
   <div class="container" style="padding: 50px 0;">
     <div class="row text-center">
-      <h2>Sistema de Folha de Pagamento</h2>
+      <h1>Sistema de Folha de Pagamento</h1>
     </div>
 
     <div class="col-8 pt-2 pb-2">
       <a href="/form" class="btn btn-success text-center">Adicionar</a>
+    </div>
+
+
+    <div class="row text-center">
+      <h3>Horistas</h3>
     </div>
 
     <div class="table-responsive pt-2 pb-2" style="font-size: 14px">
@@ -40,7 +45,7 @@
         </thead>
         <tbody class="text-center">
           {% for dbs in db %}
-          {% if dbs.is_active == True %}
+          {% if dbs.is_active == True and dbs.tipo == "HORISTA"%}
 
           <tr>
             <th scope="row">{{dbs.id}}</th>
@@ -53,17 +58,11 @@
             {% endif %}
             <td>R$: {{dbs.salario}},00</td>
 
-            <!-- {% if dbs.tipo == "COMISSIONADO"%}
-            <td>{{dbs.comissao}}%</td>
-            {% else %}
-            <td>0</td>
-            {% endif %} -->
             {% if dbs.sindicato %}
             <td>Sim</td>
             {% else %}
             <td>Não</td>
             {% endif %}
-
 
             <td>{{dbs.forma_pagamento}}</td>
 
@@ -75,15 +74,8 @@
               {% endif %} {% if dbs.tipo == "COMISSIONADO"%}
               <a class="btn btn-dark text-white" href="/vendas/{{dbs.id}}">Venda</a>
               {% endif %}
-              <!-- 
-                <a class="btn btn-success" href="/view/{{dbs.id}}/"
-                  >Detalhes</a
-                > -->
               <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a>
-
               <a class="btn btn-warning" href="/desativar/{{dbs.id}}">Apagar</a>
-
-              <!-- <a class="btn btn-danger btnDel" href="/delete/{{dbs.id}}">Excluir</a> -->
             </td>
           </tr>
           {% endif %}
@@ -93,6 +85,140 @@
     </div>
 
     <br>
+
+    <div class="row text-center">
+      <h3>Comissionados</h3>
+    </div>
+
+    <div class="table-responsive pt-2 pb-2" style="font-size: 14px">
+      <table class="table table-striped">
+        <thead class="text-center">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Endereço</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Salário</th>
+            <!-- <th scope="col">Comissão</th> -->
+
+            <th scope="col">Pertence ao Sindicato</th>
+            <th scope="col">Forma de pagamento</th>
+            <th scope="col">Total a Receber</th>
+
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          {% for dbs in db %}
+          {% if dbs.is_active == True and dbs.tipo == "COMISSIONADO"%}
+
+          <tr>
+            <th scope="row">{{dbs.id}}</th>
+            <td>{{dbs.nome}}</td>
+            <td>{{dbs.endereco}}</td>
+            {% if dbs.tipo == "COMISSIONADO"%}
+            <td>COMISS.</td>
+            {% else %}
+            <td>{{dbs.tipo}}</td>
+            {% endif %}
+            <td>R$: {{dbs.salario}},00</td>
+
+            {% if dbs.sindicato %}
+            <td>Sim</td>
+            {% else %}
+            <td>Não</td>
+            {% endif %}
+
+            <td>{{dbs.forma_pagamento}}</td>
+
+            <td>R$: {{dbs.total_a_receber}},00</td>
+
+            <td>
+              {% if dbs.tipo == "HORISTA"%}
+              <a class="btn btn-info text-white" href="/ponto/{{dbs.id}}">Ponto</a>
+              {% endif %} {% if dbs.tipo == "COMISSIONADO"%}
+              <a class="btn btn-dark text-white" href="/vendas/{{dbs.id}}">Venda</a>
+              {% endif %}
+              <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a>
+              <a class="btn btn-warning" href="/desativar/{{dbs.id}}">Apagar</a>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <br>
+    <div class="row text-center">
+      <h3>Mensalistas</h3>
+    </div>
+
+
+    <div class="table-responsive pt-2 pb-2" style="font-size: 14px">
+      <table class="table table-striped">
+        <thead class="text-center">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Endereço</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Salário</th>
+            <!-- <th scope="col">Comissão</th> -->
+
+            <th scope="col">Pertence ao Sindicato</th>
+            <th scope="col">Forma de pagamento</th>
+            <th scope="col">Total a Receber</th>
+
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          {% for dbs in db %}
+          {% if dbs.is_active == True and dbs.tipo == "MENSALISTA"%}
+
+          <tr>
+            <th scope="row">{{dbs.id}}</th>
+            <td>{{dbs.nome}}</td>
+            <td>{{dbs.endereco}}</td>
+            {% if dbs.tipo == "COMISSIONADO"%}
+            <td>COMISS.</td>
+            {% else %}
+            <td>{{dbs.tipo}}</td>
+            {% endif %}
+            <td>R$: {{dbs.salario}},00</td>
+
+            {% if dbs.sindicato %}
+            <td>Sim</td>
+            {% else %}
+            <td>Não</td>
+            {% endif %}
+
+            <td>{{dbs.forma_pagamento}}</td>
+
+            <td>R$: {{dbs.total_a_receber}},00</td>
+
+            <td>
+              {% if dbs.tipo == "HORISTA"%}
+              <a class="btn btn-info text-white" href="/ponto/{{dbs.id}}">Ponto</a>
+              {% endif %} {% if dbs.tipo == "COMISSIONADO"%}
+              <a class="btn btn-dark text-white" href="/vendas/{{dbs.id}}">Venda</a>
+              {% endif %}
+              <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a>
+              <a class="btn btn-warning" href="/desativar/{{dbs.id}}">Apagar</a>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <br>
+
+
+
+
 
     <div class="row text-center">
       <h2>Funcionários Desativados</h2>
