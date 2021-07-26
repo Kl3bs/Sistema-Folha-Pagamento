@@ -174,14 +174,15 @@ def listar_vendas(request, pk):
 def remover_pagamento_comissao(funcionario_id,pk):
     instance = Venda.objects.get(pk=pk)
     user = Funcionario.objects.get(pk=funcionario_id)
-    result =  user.salario - (instance.valor_venda * user.comissao/100) 
-    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=result)
+    user.total_a_receber -= (instance.valor_venda * (user.comissao/100)) 
+    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=user.total_a_receber)
 
 def inserir_pagamento_comissao(funcionario_id,pk):
     instance = Venda.objects.get(pk=pk)
     user = Funcionario.objects.get(pk=funcionario_id)
-    result =  user.salario + (instance.valor_venda * user.comissao/100) 
-    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=result)
+    user.total_a_receber += (instance.valor_venda * (user.comissao/100)) 
+    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=user.total_a_receber)
+    
 
 def desativar_venda(request, funcionario_id, pk):
     remover_pagamento_comissao(funcionario_id, pk)
