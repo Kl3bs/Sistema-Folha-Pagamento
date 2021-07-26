@@ -28,7 +28,7 @@ def create(request):
         instance = form.save()
         instance.is_active = True
 
-        if instance.tipo == "MENSALISTA":
+        if instance.tipo == "MENSALISTA" or instance.tipo == "COMISSIONADO":
             instance.total_a_receber = instance.salario
         else:
             instance.total_a_receber = 0
@@ -136,10 +136,18 @@ def vendas(request, pk):
 
 
 def nova_venda(request, pk):
+    user = Funcionario.objects.get(pk=pk)
     form = VendaForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
         instance = form.save()
         instance.funcionario_id = pk
+        instance.is_active = True
+        
+        calculo_comissao = (instance.valor_venda * (user.comissao / 100))
+        total = user.total_a_receber + calculo_comissao
+
+        Funcionario.objects.filter(pk=pk).update(total_a_receber=total)
+
         instance.save()
 
         return redirect('home')  #*REDIRECIONA PARA A HOME
@@ -161,6 +169,31 @@ def listar_vendas(request, pk):
     }
 
     return render(request, 'vendas/listar_vendas.html', context)
+
+
+def remover_pagamento_comissao(funcionario_id,pk):
+    instance = Venda.objects.get(pk=pk)
+    user = Funcionario.objects.get(pk=funcionario_id)
+    result =  user.salario - (instance.valor_venda * user.comissao/100) 
+    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=result)
+
+def inserir_pagamento_comissao(funcionario_id,pk):
+    instance = Venda.objects.get(pk=pk)
+    user = Funcionario.objects.get(pk=funcionario_id)
+    result =  user.salario + (instance.valor_venda * user.comissao/100) 
+    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=result)
+
+def desativar_venda(request, funcionario_id, pk):
+    remover_pagamento_comissao(funcionario_id, pk)
+    Venda.objects.filter(pk=pk).update(is_active=False)
+    return listar_vendas(request, funcionario_id)
+
+
+def reativar_venda(request, funcionario_id, pk): 
+    inserir_pagamento_comissao(funcionario_id, pk)
+    Venda.objects.filter(pk=pk).update(is_active=True)
+    return listar_vendas(request, funcionario_id)
+
 
 
 def inserir_pagamento_hora(instance, pk):
@@ -211,6 +244,4 @@ def reativar_ponto(request, funcionario_id, pk):
 def deletar_ponto(request, funcionario_id, pk):
     ponto = PontoFuncionario.objects.get(pk=pk)
     ponto.delete()
-
     return ponto_info(request, funcionario_id)
-    #return render(request, 'ponto/ponto_info.html', funcionario)

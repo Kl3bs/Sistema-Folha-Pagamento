@@ -2,6 +2,8 @@ $(document).ready(function () {
   $("#id_data_ponto").datepicker({ changeYear: true, changeMonth: true });
 });
 
+$("#id_data_venda").datepicker({ changeYear: true, changeMonth: true });
+
 //TIME PICKER CONFIG
 
 $("#id_hora_entrada").timepicker({

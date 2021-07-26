@@ -54,5 +54,6 @@ class Venda(models.Model):
     descricao_item = models.CharField(max_length=1000)
     data_venda = models.DateField(null=True)
     valor_venda = models.IntegerField(
-        default=1, validators=[MinValueValidator(1),
+        default=0, validators=[MinValueValidator(0),
                                MaxValueValidator(99999)])
+    is_active = models.BooleanField(null=True)
