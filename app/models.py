@@ -32,6 +32,8 @@ class Funcionario(models.Model):
 
     is_active = models.BooleanField(null=True)
 
+    data_pagamento = models.DateField(null=True)
+
 
 class PontoFuncionario(models.Model):
     funcionario = models.ForeignKey(Funcionario,

@@ -11,7 +11,7 @@ class FuncionarioForm(ModelForm):
         model = Funcionario
         fields = [
             'nome', 'endereco', 'tipo', 'salario', 'sindicato',
-            'forma_pagamento', 'comissao'
+            'forma_pagamento', 'comissao', 'data_pagamento'
         ]
 
 

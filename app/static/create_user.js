@@ -1,4 +1,10 @@
 $(document).ready(function () {
+  console.log("oi");
+  $("#id_data_pagamento").datepicker({
+    changeYear: true,
+    changeMonth: true,
+  });
+
   $('label[for="id_comissao"]').hide();
   $("#id_comissao").hide();
 
@@ -14,3 +20,9 @@ $(document).ready(function () {
     }
   });
 });
+
+// $(document).ready(function () {
+//   //DATE PICKER CONFIG
+//   console.log(1);
+//   $("#id_data_ponto").datepicker({ changeYear: true, changeMonth: true });
+// });

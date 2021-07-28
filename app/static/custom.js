@@ -1,11 +1,11 @@
 $(document).ready(function () {
+  //DATE PICKER CONFIG
+
   $("#id_data_ponto").datepicker({ changeYear: true, changeMonth: true });
 
   $("#id_data_venda").datepicker({ changeYear: true, changeMonth: true });
 
-  //TIME PICKER CONFIG
-
-  // $("#id_valor_venda").mask("0000.000");
+  //TIME PISCKER CONFIG
 
   $("#id_hora_entrada").timepicker({
     timeFormat: "HH:mm",

@@ -15,12 +15,13 @@
     <div class="row text-center">
       <h1>Sistema de Folha de Pagamento</h1>
     </div>
+    <br><br>
 
-    <div class="col-8 pt-2 pb-2">
+    <div class="text-center">
       <a href="/form" class="btn btn-success text-center">Adicionar</a>
+      <a href="/pagamento" class="btn btn-secondary">Rodar folha de Pagamento</a>
     </div>
-
-
+    <br><br>
     <div class="row text-center">
       <h3>Horistas</h3>
     </div>
@@ -33,13 +34,10 @@
             <th scope="col">Nome</th>
             <th scope="col">Endereço</th>
             <th scope="col">Tipo</th>
-            <th scope="col">Salário</th>
-            <!-- <th scope="col">Comissão</th> -->
-
-            <th scope="col">Pertence ao Sindicato</th>
+            <th scope="col">Val. Hora</th>
+            <th scope="col">Sindicato</th>
             <th scope="col">Forma de pagamento</th>
             <th scope="col">Total a Receber</th>
-
             <th scope="col">Ações</th>
           </tr>
         </thead>
@@ -99,9 +97,8 @@
             <th scope="col">Endereço</th>
             <th scope="col">Tipo</th>
             <th scope="col">Salário</th>
-            <!-- <th scope="col">Comissão</th> -->
 
-            <th scope="col">Pertence ao Sindicato</th>
+            <th scope="col">Sindicato</th>
             <th scope="col">Forma de pagamento</th>
             <th scope="col">Total a Receber</th>
 
@@ -122,7 +119,6 @@
             <td>{{dbs.tipo}}</td>
             {% endif %}
             <td>R$: {{dbs.salario}},00</td>
-
             {% if dbs.sindicato %}
             <td>Sim</td>
             {% else %}
@@ -164,9 +160,7 @@
             <th scope="col">Endereço</th>
             <th scope="col">Tipo</th>
             <th scope="col">Salário</th>
-            <!-- <th scope="col">Comissão</th> -->
-
-            <th scope="col">Pertence ao Sindicato</th>
+            <th scope="col">Sindicato</th>
             <th scope="col">Forma de pagamento</th>
             <th scope="col">Total a Receber</th>
 
@@ -216,10 +210,6 @@
 
     <br>
 
-
-
-
-
     <div class="row text-center">
       <h2>Funcionários Desativados</h2>
     </div>
@@ -235,7 +225,7 @@
             <th scope="col">Salário</th>
             <!-- <th scope="col">Comissão</th> -->
 
-            <th scope="col">Pertence ao Sindicato</th>
+            <th scope="col">Sindicato</th>
             <th scope="col">Forma de pagamento</th>
 
             <th scope="col">Ações</th>

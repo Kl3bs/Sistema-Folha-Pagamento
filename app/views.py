@@ -4,10 +4,17 @@ from app.forms import FuncionarioForm, PontoForm, VendaForm
 from app.models import Funcionario, PontoFuncionario, Venda
 from django.db.models import Sum
 from django.db.models import F
-from datetime import datetime
+from datetime import date, datetime
+from django.db.models import Q
 
 
-# Create your views here.
+#* MÉTODO PARA OBTER O DIA DE HOJE
+def get_today_date():
+    today = date.today()
+    return today
+
+
+#* (CRUD) E MÉTODOS GERAIS
 def home(request):
     data = {}
     data['db'] = Funcionario.objects.all(
@@ -82,6 +89,81 @@ def reativar(request, pk):
     return redirect('home')
 
 
+#!MÉTODOS DAS VENDAS
+
+
+def vendas(request, pk):
+    data = {}
+    data['db'] = Funcionario.objects.get(pk=pk)
+    data['venda_form'] = VendaForm()
+    return render(request, 'vendas/nova_venda.html', data)
+
+
+def nova_venda(request, pk):
+    user = Funcionario.objects.get(pk=pk)
+    form = VendaForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
+    if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
+        instance = form.save()
+        instance.funcionario_id = pk
+        instance.is_active = True
+
+        calculo_comissao = (instance.valor_venda * (user.comissao / 100))
+        total = user.total_a_receber + calculo_comissao
+
+        Funcionario.objects.filter(pk=pk).update(total_a_receber=total)
+
+        instance.save()
+
+        return redirect('home')  #*REDIRECIONA PARA A HOME
+
+
+def listar_vendas(request, pk):
+    user = Funcionario.objects.get(pk=pk)
+    queryset = Venda.objects.all()
+
+    #* SOMA TODOS AS VENDAS DO FUNCIONARIO, MULTIPLICA PELA TAXA DE COMISSAO E RETORNA O RESULTADO
+    total_comissao = list(
+        Venda.objects.filter(funcionario_id__exact=pk).aggregate(
+            Sum('valor_venda')).values())[0] * (user.comissao / 100)
+
+    context = {
+        "user": user,
+        "object_list": queryset,
+        "total_comissao": total_comissao
+    }
+
+    return render(request, 'vendas/listar_vendas.html', context)
+
+
+def remover_pagamento_comissao(funcionario_id, pk):
+    instance = Venda.objects.get(pk=pk)
+    user = Funcionario.objects.get(pk=funcionario_id)
+    user.total_a_receber -= (instance.valor_venda * (user.comissao / 100))
+    Funcionario.objects.filter(pk=funcionario_id).update(
+        total_a_receber=user.total_a_receber)
+
+
+def inserir_pagamento_comissao(funcionario_id, pk):
+    instance = Venda.objects.get(pk=pk)
+    user = Funcionario.objects.get(pk=funcionario_id)
+    user.total_a_receber += (instance.valor_venda * (user.comissao / 100))
+    Funcionario.objects.filter(pk=funcionario_id).update(
+        total_a_receber=user.total_a_receber)
+
+
+def desativar_venda(request, funcionario_id, pk):
+    remover_pagamento_comissao(funcionario_id, pk)
+    Venda.objects.filter(pk=pk).update(is_active=False)
+    return listar_vendas(request, funcionario_id)
+
+
+def reativar_venda(request, funcionario_id, pk):
+    inserir_pagamento_comissao(funcionario_id, pk)
+    Venda.objects.filter(pk=pk).update(is_active=True)
+    return listar_vendas(request, funcionario_id)
+
+
+#* MÉTODOS RELACIONADOS AOS PONTOS BATIDOS
 def ponto(request, pk):
     data = {}
     data['db'] = Funcionario.objects.get(pk=pk)
@@ -128,83 +210,14 @@ def ponto_info(request, pk):
     return render(request, 'ponto/ponto_info.html', context)
 
 
-def vendas(request, pk):
-    data = {}
-    data['db'] = Funcionario.objects.get(pk=pk)
-    data['venda_form'] = VendaForm()
-    return render(request, 'vendas/nova_venda.html', data)
-
-
-def nova_venda(request, pk):
-    user = Funcionario.objects.get(pk=pk)
-    form = VendaForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
-    if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
-        instance = form.save()
-        instance.funcionario_id = pk
-        instance.is_active = True
-        
-        calculo_comissao = (instance.valor_venda * (user.comissao / 100))
-        total = user.total_a_receber + calculo_comissao
-
-        Funcionario.objects.filter(pk=pk).update(total_a_receber=total)
-
-        instance.save()
-
-        return redirect('home')  #*REDIRECIONA PARA A HOME
-
-
-def listar_vendas(request, pk):
-    user = Funcionario.objects.get(pk=pk)
-    queryset = Venda.objects.all()
-
-    #* SOMA TODOS AS VENDAS DO FUNCIONARIO, MULTIPLICA PELA TAXA DE COMISSAO E RETORNA O RESULTADO
-    total_comissao = list(
-        Venda.objects.filter(funcionario_id__exact=pk).aggregate(
-            Sum('valor_venda')).values())[0] * (user.comissao / 100)
-
-    context = {
-        "user": user,
-        "object_list": queryset,
-        "total_comissao": total_comissao
-    }
-
-    return render(request, 'vendas/listar_vendas.html', context)
-
-
-def remover_pagamento_comissao(funcionario_id,pk):
-    instance = Venda.objects.get(pk=pk)
-    user = Funcionario.objects.get(pk=funcionario_id)
-    user.total_a_receber -= (instance.valor_venda * (user.comissao/100)) 
-    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=user.total_a_receber)
-
-def inserir_pagamento_comissao(funcionario_id,pk):
-    instance = Venda.objects.get(pk=pk)
-    user = Funcionario.objects.get(pk=funcionario_id)
-    user.total_a_receber += (instance.valor_venda * (user.comissao/100)) 
-    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=user.total_a_receber)
-    
-
-def desativar_venda(request, funcionario_id, pk):
-    remover_pagamento_comissao(funcionario_id, pk)
-    Venda.objects.filter(pk=pk).update(is_active=False)
-    return listar_vendas(request, funcionario_id)
-
-
-def reativar_venda(request, funcionario_id, pk): 
-    inserir_pagamento_comissao(funcionario_id, pk)
-    Venda.objects.filter(pk=pk).update(is_active=True)
-    return listar_vendas(request, funcionario_id)
-
-
-
 def inserir_pagamento_hora(instance, pk):
     user = Funcionario.objects.get(pk=pk)
 
     #CALCULA O VALOR A RECEBER ()
     if instance.horas_trabalhadas > 8:
         #CALCULA O BONUS DE 1.5x
-        excedente =  (instance.horas_trabalhadas - 8)
-        bonus = (excedente * 1.5) * 10 
+        excedente = (instance.horas_trabalhadas - 8)
+        bonus = (excedente * 1.5) * 10
         user.total_a_receber += (user.salario * 8) + bonus
     else:
         user.total_a_receber += (user.salario * instance.horas_trabalhadas)
@@ -213,31 +226,32 @@ def inserir_pagamento_hora(instance, pk):
         total_a_receber=user.total_a_receber)
 
 
-def remover_pagamento_hora(funcionario_id,pk):
+def remover_pagamento_hora(funcionario_id, pk):
     instance = PontoFuncionario.objects.get(pk=pk)
     user = Funcionario.objects.get(pk=funcionario_id)
 
     if instance.horas_trabalhadas > 8:
         #CALCULA O BONUS DE 1.5x
-        excedente =  (instance.horas_trabalhadas - 8)
-        bonus = (excedente * 1.5) * 10 
+        excedente = (instance.horas_trabalhadas - 8)
+        bonus = (excedente * 1.5) * 10
         user.total_a_receber -= (user.salario * 8) + bonus
     else:
         user.total_a_receber -= (user.salario * instance.horas_trabalhadas)
 
     result = user.total_a_receber
-    Funcionario.objects.filter(pk=funcionario_id).update(total_a_receber=result)
+    Funcionario.objects.filter(pk=funcionario_id).update(
+        total_a_receber=result)
 
 
 def desativar_ponto(request, funcionario_id, pk):
-    remover_pagamento_hora(funcionario_id,pk)
+    remover_pagamento_hora(funcionario_id, pk)
     PontoFuncionario.objects.filter(pk=pk).update(is_active=False)
     return ponto_info(request, funcionario_id)
 
 
-def reativar_ponto(request, funcionario_id, pk): 
+def reativar_ponto(request, funcionario_id, pk):
     instance = PontoFuncionario.objects.get(pk=pk)
-    inserir_pagamento_hora(instance,funcionario_id)
+    inserir_pagamento_hora(instance, funcionario_id)
     PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
     return ponto_info(request, funcionario_id)
 
@@ -246,3 +260,17 @@ def deletar_ponto(request, funcionario_id, pk):
     ponto = PontoFuncionario.objects.get(pk=pk)
     ponto.delete()
     return ponto_info(request, funcionario_id)
+
+
+#* FOLHA DE PAGAMENTO
+
+
+def rodar_folha(request):
+
+    data = get_today_date()
+    users = Funcionario.objects.filter(
+        Q(is_active=True) & Q(data_pagamento=data))
+    context = {
+        "users": users,
+    }
+    return render(request, 'pagamento/pagamento.html', context)
