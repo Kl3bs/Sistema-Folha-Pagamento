@@ -34,6 +34,8 @@ class Funcionario(models.Model):
 
     data_pagamento = models.DateField(null=True)
 
+    taxa_sindicato = models.IntegerField(null=True)
+
 
 class PontoFuncionario(models.Model):
     funcionario = models.ForeignKey(Funcionario,

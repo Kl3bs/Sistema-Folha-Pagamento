@@ -57,6 +57,9 @@ def edit(request, pk):
     data['db'] = Funcionario.objects.get(pk=pk)
     data['form'] = FuncionarioForm(instance=data['db'])
 
+
+    # aplicar_taxa(request,pk)
+
     return render(request, 'user/form.html', data)
 
 
@@ -264,7 +267,6 @@ def deletar_ponto(request, funcionario_id, pk):
 
 #* FOLHA DE PAGAMENTO
 
-
 def rodar_folha(request):
 
     data = get_today_date()
@@ -274,3 +276,21 @@ def rodar_folha(request):
         "users": users,
     }
     return render(request, 'pagamento/pagamento.html', context)
+
+#* SINDICATO
+
+def mostrar_funcionarios(request):
+    funcionarios = Funcionario.objects.all()
+    context = {
+        "funcionarios": funcionarios
+    }
+    return render(request, 'sindicato/painel_sindicato.html', context)
+
+def aplicar_taxa(request, pk):
+    funcionario = Funcionario.objects.get(pk=pk)
+    taxa = funcionario.taxa_sindicato
+    total = funcionario.total_a_receber - taxa
+
+    Funcionario.objects.filter(pk=pk).update(total_a_receber=total)
+
+    # return render(request, 'sindicato/painel_sindicato.html')

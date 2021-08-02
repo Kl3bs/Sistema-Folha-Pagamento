@@ -10,7 +10,7 @@ class FuncionarioForm(ModelForm):
     class Meta:
         model = Funcionario
         fields = [
-            'nome', 'endereco', 'tipo', 'salario', 'sindicato',
+            'nome', 'endereco', 'tipo', 'salario', 'sindicato','taxa_sindicato',
             'forma_pagamento', 'comissao', 'data_pagamento'
         ]
 
