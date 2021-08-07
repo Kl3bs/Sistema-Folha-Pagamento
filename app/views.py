@@ -9,6 +9,8 @@ from datetime import date, datetime
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 
+import pendulum
+
 
 #* MÉTODO PARA OBTER O DIA DE HOJE
 def get_today_date():
@@ -37,10 +39,24 @@ def create(request):
         instance = form.save()
         instance.is_active = True
 
-        if instance.tipo == "MENSALISTA" or instance.tipo == "COMISSIONADO":
+        if instance.tipo == "MENSALISTA":
             instance.total_a_receber = instance.salario
-        else:
+
+            today = pendulum.today()
+            instance.data_pagamento = today.add(days=30)
+
+        if instance.tipo == "COMISSIONADO":
+            instance.total_a_receber = instance.salario
+
+            today = pendulum.today()
+            instance.data_pagamento = today.add(days=15)
+
+        if instance.tipo == "HORISTA":
             instance.total_a_receber = 0
+
+            #BIBLIOTECA PENDULUM CALCULA A DATA DE PAGAMENTO
+            instance.data_pagamento = pendulum.now().next(
+                pendulum.FRIDAY).strftime('%Y-%m-%d')
 
         instance.save()  #!SALVA NO BANCO
 
@@ -183,6 +199,7 @@ def bater_ponto(request, pk):
         instance.is_active = True
         instance.funcionario_id = pk
 
+        #!CASTING DAS HORAS
         hora_entrada = int((instance.hora_entrada).strftime("%H"))
         hora_saida = int((instance.hora_saida).strftime("%H"))
         instance.horas_trabalhadas = (hora_saida - hora_entrada)
