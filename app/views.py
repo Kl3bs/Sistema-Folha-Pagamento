@@ -1,3 +1,4 @@
+from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from app.forms import FuncionarioForm, PontoForm, VendaForm
@@ -6,6 +7,7 @@ from django.db.models import Sum
 from django.db.models import F
 from datetime import date, datetime
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 
 #* MÉTODO PARA OBTER O DIA DE HOJE
@@ -56,9 +58,6 @@ def edit(request, pk):
     data = {}
     data['db'] = Funcionario.objects.get(pk=pk)
     data['form'] = FuncionarioForm(instance=data['db'])
-
-
-    # aplicar_taxa(request,pk)
 
     return render(request, 'user/form.html', data)
 
@@ -267,6 +266,7 @@ def deletar_ponto(request, funcionario_id, pk):
 
 #* FOLHA DE PAGAMENTO
 
+
 def rodar_folha(request):
 
     data = get_today_date()
@@ -277,20 +277,21 @@ def rodar_folha(request):
     }
     return render(request, 'pagamento/pagamento.html', context)
 
+
 #* SINDICATO
+
 
 def mostrar_funcionarios(request):
     funcionarios = Funcionario.objects.all()
-    context = {
-        "funcionarios": funcionarios
-    }
+    context = {"funcionarios": funcionarios}
     return render(request, 'sindicato/painel_sindicato.html', context)
 
-def aplicar_taxa(request, pk):
-    funcionario = Funcionario.objects.get(pk=pk)
-    taxa = funcionario.taxa_sindicato
-    total = funcionario.total_a_receber - taxa
 
-    Funcionario.objects.filter(pk=pk).update(total_a_receber=total)
-
-    # return render(request, 'sindicato/painel_sindicato.html')
+@csrf_exempt
+def aplicar_taxa(request, pk, value):
+    funcionario = Funcionario.objects.filter(pk=pk)
+    if request.is_ajax() and request.POST:
+        funcionario.update(taxa_sindicato=value)
+        return render(request, 'sindicato/painel_sindicato.html')
+    else:
+        raise Http404
