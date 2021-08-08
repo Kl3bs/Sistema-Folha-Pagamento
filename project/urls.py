@@ -58,8 +58,8 @@ urlpatterns = [
 
     #*FOLHA DE PAGAMENTO
     path('pagamento/', rodar_folha, name='pagamento'),
-
-    #*SINDICATO
+ 
+    #*SINDICATO!
     path('painel_sindicato/', mostrar_funcionarios, name='painel_sindicato'),
     path('painel_sindicato/aplicar_taxa/<int:pk>/<int:value>',
          aplicar_taxa,
