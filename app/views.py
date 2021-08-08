@@ -294,10 +294,16 @@ def rodar_folha(request):
     }
     return render(request, 'pagamento/pagamento.html', context)
 
+@csrf_exempt
+def agenda_pagamento(request, pk, data):
+    funcionario = Funcionario.objects.filter(pk=pk)
+    if request.is_ajax() and request.POST:
+        funcionario.update(data_pagamento=data)
+        return render(request, 'index.html')
+    else:
+        raise Http404
 
 #* SINDICATO
-
-
 def mostrar_funcionarios(request):
     funcionarios = Funcionario.objects.all()
     context = {"funcionarios": funcionarios}
@@ -312,3 +318,5 @@ def aplicar_taxa(request, pk, value):
         return render(request, 'sindicato/painel_sindicato.html')
     else:
         raise Http404
+
+
