@@ -274,8 +274,11 @@ def desativar_ponto(request, funcionario_id, pk):
 
 def reativar_ponto(request, funcionario_id, pk):
     instance = PontoFuncionario.objects.get(pk=pk)
-    inserir_pagamento_hora(instance, funcionario_id)
-    PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
+    funcionario = Funcionario.objects.get(pk=funcionario_id)
+    if funcionario.mes_pago < instance.mes_ponto:
+        inserir_pagamento_hora(instance, funcionario_id)
+        PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
+        
     return ponto_info(request, funcionario_id)
 
 
@@ -306,11 +309,12 @@ def rodar_folha(request):
     users = Funcionario.objects.filter(
         Q(is_active=True) & Q(data_pagamento=today))
 
+    mes_atual = int(today.month)
+    users.update(mes_pago=mes_atual)    
 
-    
     users.update(total_a_receber=0)
-
     users.update(data_pagamento=today.add(months=1))
+
 
     return render(request, 'pagamento/pagamento.html')
 

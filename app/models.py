@@ -36,6 +36,9 @@ class Funcionario(models.Model):
 
     taxa_sindicato = models.IntegerField(null=True)
 
+    mes_pago = models.IntegerField(null=True)
+
+
 
 class PontoFuncionario(models.Model):
     funcionario = models.ForeignKey(Funcionario,
@@ -47,6 +50,8 @@ class PontoFuncionario(models.Model):
     hora_saida = models.TimeField(null=True)
     horas_trabalhadas = models.IntegerField(null=True)
     is_active = models.BooleanField(null=True)
+    mes_ponto = models.IntegerField(null=True)
+
 
 
 class Venda(models.Model):
