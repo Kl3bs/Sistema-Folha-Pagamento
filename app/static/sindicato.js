@@ -1,6 +1,3 @@
-$(document).ready(function () {
-  //   $("#aplicar_taxa").click(aplicarTaxa());
-});
 
 const csrftoken = Cookies.get("csrftoken");
 

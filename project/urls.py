@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import  agenda_pagamento, aplicar_taxa, bater_ponto, deletar_ponto, desativar, desativar_ponto, desativar_venda, home, form, create, listar_vendas, mostrar_funcionarios, reativar, reativar_ponto, reativar_venda, rodar_folha, view, edit, update, delete, ponto, ponto_info, nova_venda, vendas
+from app.views import  agenda_pagamento, aplicar_taxa, bater_ponto, deletar_ponto, desativar, desativar_ponto, desativar_venda, folha_pagamento, home, form, create, listar_vendas, mostrar_funcionarios, reativar, reativar_ponto, reativar_venda, rodar_folha, view, edit, update, delete, ponto, ponto_info, nova_venda, vendas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -57,8 +57,9 @@ urlpatterns = [
          name='reativar'),
 
     #*FOLHA DE PAGAMENTO
-    path('pagamento/', rodar_folha, name='pagamento'),
-        path('agenda_pagamento/<int:pk>/<str:data>', agenda_pagamento, name='agenda_pagamento'),
+    path('pagamento/', folha_pagamento, name='pagamento'),
+    path('rodar_folha/', rodar_folha, name='rodar_folha'),
+    path('agenda_pagamento/<int:pk>/<int:dia>', agenda_pagamento, name='agenda_pagamento'),
 
  
     #*SINDICATO!

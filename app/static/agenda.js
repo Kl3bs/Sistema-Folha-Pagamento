@@ -1,9 +1,23 @@
-$(document).ready(function () {
+  const csrftoken = Cookies.get("csrftoken");
+
+  var funcionario_id;
+
+  function getId(id) {
+    funcionario_id = id;
+  }
+
   $("#salvar_data").prop("disabled", true);
 
-  $("#nova_data").datepicker({ changeYear: true, changeMonth: true });
+  var dateToday = new Date();
+  $("#nova_data").datepicker({
+    changeYear: false,
+    changeMonth: false,
+    minDate: dateToday,
+    maxDate: "+15d",
+    dateFormat: "dd-M-yy",
+  });
 
-  $("#botao").click(function () {
+  $(".botao").click(function () {
     $("#exampleModal").modal("show");
   });
 
@@ -17,10 +31,12 @@ $(document).ready(function () {
 
   $("#salvar_data").click(function () {
     data = $("#nova_data").val();
-    id = $("#user_id").val();
+    data = `${data[0]}${data[1]}`  
+    
+    $.post(`agenda_pagamento/${funcionario_id}/${data}`, {
+      csrfmiddlewaretoken: csrftoken,
+    });
 
-    console.log(data);
-    console.log(id);
-    $.post(`agenda_pagamento/${id}/${data}`);
+    window.location.reload()
+
   });
-});

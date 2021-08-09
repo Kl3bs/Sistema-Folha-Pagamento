@@ -253,7 +253,11 @@ def remover_pagamento_hora(funcionario_id, pk):
         #CALCULA O BONUS DE 1.5x
         excedente = (instance.horas_trabalhadas - 8)
         bonus = (excedente * 1.5) * 10
-        user.total_a_receber -= (user.salario * 8) + bonus
+        calc = (user.salario * 8) + bonus
+        if user.total_a_receber >= calc:
+            user.total_a_receber -= calc
+        else:
+            user.total_a_receber = 0
     else:
         user.total_a_receber -= (user.salario * instance.horas_trabalhadas)
 
@@ -284,32 +288,52 @@ def deletar_ponto(request, funcionario_id, pk):
 #* FOLHA DE PAGAMENTO
 
 
-def rodar_folha(request):
+def folha_pagamento(request):
 
-    data = get_today_date()
+    data = pendulum.today()
     users = Funcionario.objects.filter(
         Q(is_active=True) & Q(data_pagamento=data))
+
+
     context = {
         "users": users,
     }
     return render(request, 'pagamento/pagamento.html', context)
 
+def rodar_folha(request):
+
+    today = pendulum.today()
+    users = Funcionario.objects.filter(
+        Q(is_active=True) & Q(data_pagamento=today))
+
+
+    
+    users.update(total_a_receber=0)
+
+    users.update(data_pagamento=today.add(months=1))
+
+    return render(request, 'pagamento/pagamento.html')
+
 @csrf_exempt
-def agenda_pagamento(request, pk, data):
+
+@csrf_exempt
+def agenda_pagamento(request, pk, dia):
     funcionario = Funcionario.objects.filter(pk=pk)
+    today = pendulum.today();
+
     if request.is_ajax() and request.POST:
-        funcionario.update(data_pagamento=data)
+        nova_data = pendulum.datetime(today.year, today.month, dia)
+        funcionario.update(data_pagamento=nova_data)
         return render(request, 'index.html')
     else:
-        raise Http404
+        raise 
 
 #* SINDICATO
 def mostrar_funcionarios(request):
     funcionarios = Funcionario.objects.all()
     context = {"funcionarios": funcionarios}
     return render(request, 'sindicato/painel_sindicato.html', context)
-
-
+ 
 @csrf_exempt
 def aplicar_taxa(request, pk, value):
     funcionario = Funcionario.objects.filter(pk=pk)

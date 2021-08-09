@@ -23,12 +23,14 @@
 
     <div class="container" style="padding: 50px 0;">
         <div class="row text-center">
-            <h1>Sistema de Folha de Pagamento</h1>
+            <h1>Folha de Pagamento</h1>
         </div>
         <br><br>
 
         <div class="text-center">
             <a href="/" class="btn btn-warning text-center">Voltar</a>
+            <a href="/rodar_folha" class="btn btn-warning text-center">Rodar folha</a>
+            
         </div>
         <br><br>
         <div class="row text-center">
@@ -47,42 +49,36 @@
                         <th scope="col">Sindicato</th>
                         <th scope="col">Forma de pagamento</th>
                         <th scope="col">Total a Receber</th>
-                        <th scope="col">Ações</th>
+                        <th scope="col">Data de Pagamento</th>
                     </tr>
                 </thead>
                 <tbody class="text-center">
-                    {% for dbs in db %}
-                    {% if dbs.is_active == True and dbs.tipo == "HORISTA"%}
+                    {% for user in users %}
+                    {% if user.is_active == True %}
 
                     <tr>
-                        <th scope="row">{{dbs.id}}</th>
-                        <td>{{dbs.nome}}</td>
-                        <td>{{dbs.endereco}}</td>
-                        {% if dbs.tipo == "COMISSIONADO"%}
+                        <th scope="row">{{user.id}}</th>
+                        <td>{{user.nome}}</td>
+                        <td>{{user.endereco}}</td>
+                        {% if user.tipo == "COMISSIONADO"%}
                         <td>COMISS.</td>
                         {% else %}
-                        <td>{{dbs.tipo}}</td>
+                        <td>{{user.tipo}}</td>
                         {% endif %}
-                        <td>R$: {{dbs.salario}},00</td>
+                        <td>R$: {{user.salario}},00</td>
 
-                        {% if dbs.sindicato %}
+                        {% if user.sindicato %}
                         <td>Sim</td>
                         {% else %}
                         <td>Não</td>
                         {% endif %}
 
-                        <td>{{dbs.forma_pagamento}}</td>
+                        <td>{{user.forma_pagamento}}</td>
 
-                        <td>R$: {{dbs.total_a_receber}},00</td>
+                        <td>R$: {{user.total_a_receber}},00</td>
 
                         <td>
-                            {% if dbs.tipo == "HORISTA"%}
-                            <a class="btn btn-info text-white" href="/ponto/{{dbs.id}}">Ponto</a>
-                            {% endif %} {% if dbs.tipo == "COMISSIONADO"%}
-                            <a class="btn btn-dark text-white" href="/vendas/{{dbs.id}}">Venda</a>
-                            {% endif %}
-                            <a class="btn btn-secondary" href="/edit/{{dbs.id}}">Editar</a>
-                            <a class="btn btn-warning" href="/desativar/{{dbs.id}}">Apagar</a>
+                            {{user.data_pagamento|date:"d/m/Y"}}
                         </td>
                     </tr>
                     {% endif %}
