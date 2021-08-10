@@ -1,9 +1,16 @@
 $(document).ready(function () {
   //DATE PICKER CONFIG
+  var dateToday = new Date();
 
-  $("#id_data_ponto").datepicker({ changeYear: true, changeMonth: true });
+  $("#id_data_ponto").datepicker({
+    changeYear: false,
+    changeMonth: false,
+    minDate: dateToday});
 
-  $("#id_data_venda").datepicker({ changeYear: true, changeMonth: true });
+  $("#id_data_venda").datepicker({
+    changeYear: false,
+    changeMonth: false,
+    minDate: dateToday,});
 
   //TIME PISCKER CONFIG
 

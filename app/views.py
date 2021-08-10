@@ -119,14 +119,20 @@ def vendas(request, pk):
 
 def nova_venda(request, pk):
     user = Funcionario.objects.get(pk=pk)
-    form = VendaForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
+    form = VendaForm(request.POST or None)
+    today  = pendulum.today()
+    #DADOS QUE VÊM DO FORMULARIO
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
         instance = form.save()
         instance.funcionario_id = pk
         instance.is_active = True
+        instance.is_paid = False
 
         calculo_comissao = (instance.valor_venda * (user.comissao / 100))
         total = user.total_a_receber + calculo_comissao
+
+        instance.mes_venda = int(today.month)
+
 
         Funcionario.objects.filter(pk=pk).update(total_a_receber=total)
 
@@ -137,6 +143,14 @@ def nova_venda(request, pk):
 
 def listar_vendas(request, pk):
     user = Funcionario.objects.get(pk=pk)
+
+    proximo_mes= int(user.data_pagamento.month)
+    #Atualiza os que já foram pagos
+    query = (Q(funcionario_id=pk) & Q(mes_venda__lte=proximo_mes))
+
+    if user.mes_pago:
+        Venda.objects.filter(query).update(is_paid=True)
+
     queryset = Venda.objects.all()
 
     #* SOMA TODOS AS VENDAS DO FUNCIONARIO, MULTIPLICA PELA TAXA DE COMISSAO E RETORNA O RESULTADO
@@ -170,6 +184,9 @@ def inserir_pagamento_comissao(funcionario_id, pk):
 
 
 def desativar_venda(request, funcionario_id, pk):
+
+    funcionario = Funcionario.objects.get(pk=funcionario_id)
+    instance = Venda.objects.get(pk=pk)
     remover_pagamento_comissao(funcionario_id, pk)
     Venda.objects.filter(pk=pk).update(is_active=False)
     return listar_vendas(request, funcionario_id)
@@ -192,7 +209,7 @@ def ponto(request, pk):
 
 def bater_ponto(request, pk):
 
-    user = Funcionario.objects.get(pk=pk)
+    today = pendulum.today()
     form = PontoForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
     if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
         instance = form.save()
@@ -203,6 +220,8 @@ def bater_ponto(request, pk):
         hora_entrada = int((instance.hora_entrada).strftime("%H"))
         hora_saida = int((instance.hora_saida).strftime("%H"))
         instance.horas_trabalhadas = (hora_saida - hora_entrada)
+        instance.mes_ponto = int(today.month)
+        instance.is_paid = False
 
         inserir_pagamento_hora(instance, pk)
 
@@ -213,17 +232,19 @@ def bater_ponto(request, pk):
 
 def ponto_info(request, pk):
     user = Funcionario.objects.get(pk=pk)
-    queryset = PontoFuncionario.objects.all()
-    time1 = PontoFuncionario.objects.values('hora_entrada')
+    #Proximo mes que o funcionario vai receber o pagamento
+    proximo_mes= int(user.data_pagamento.month)
+    #Atualiza os que já foram pagos
+    query = (Q(funcionario_id=pk) & Q(mes_ponto__lte=proximo_mes))
 
-    horas_trabalhadas = PontoFuncionario.objects.filter(
-        funcionario_id__exact=pk).values_list()
+    if user.mes_pago:
+        PontoFuncionario.objects.filter(query).update(is_paid=True)
+
+    queryset = PontoFuncionario.objects.all()
 
     context = {
         "user": user,
         "object_list": queryset,
-        "time1": time1,
-        "horas_trabalhadas": horas_trabalhadas
     }
 
     return render(request, 'ponto/ponto_info.html', context)
@@ -275,9 +296,8 @@ def desativar_ponto(request, funcionario_id, pk):
 def reativar_ponto(request, funcionario_id, pk):
     instance = PontoFuncionario.objects.get(pk=pk)
     funcionario = Funcionario.objects.get(pk=funcionario_id)
-    if funcionario.mes_pago < instance.mes_ponto:
-        inserir_pagamento_hora(instance, funcionario_id)
-        PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
+    inserir_pagamento_hora(instance, funcionario_id)
+    PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
         
     return ponto_info(request, funcionario_id)
 
@@ -306,8 +326,13 @@ def folha_pagamento(request):
 def rodar_folha(request):
 
     today = pendulum.today()
+    
     users = Funcionario.objects.filter(
         Q(is_active=True) & Q(data_pagamento=today))
+
+    # pontos = PontoFuncionario.objects.filter(
+    #     Q(is_active=True) & Q(data_ponto__lte= today))
+
 
     mes_atual = int(today.month)
     users.update(mes_pago=mes_atual)    

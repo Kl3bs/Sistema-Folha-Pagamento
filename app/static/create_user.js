@@ -1,13 +1,9 @@
 $(document).ready(function () {
-  console.log("oi");
+  var dateToday = new Date();
+
 
   $("#id_taxa_sindicato").hide();
   $('label[for="id_taxa_sindicato"]').hide();
-
-  $("#id_data_pagamento").datepicker({
-    changeYear: true,
-    changeMonth: true,
-  });
 
   $('label[for="id_comissao"]').hide();
   $("#id_comissao").hide();

@@ -51,7 +51,7 @@ class PontoFuncionario(models.Model):
     horas_trabalhadas = models.IntegerField(null=True)
     is_active = models.BooleanField(null=True)
     mes_ponto = models.IntegerField(null=True)
-
+    is_paid = models.BooleanField(null=True)
 
 
 class Venda(models.Model):
@@ -66,3 +66,6 @@ class Venda(models.Model):
         default=0, validators=[MinValueValidator(0),
                                MaxValueValidator(99999)])
     is_active = models.BooleanField(null=True)
+
+    mes_venda = models.IntegerField(null=True)
+    is_paid = models.BooleanField(null=True)

@@ -23,10 +23,7 @@
     <div class="row ">
       <div class="pt-4 text-center">
         <h1>Todas as vendas</h1>
-        <h2>Colaborador: {{user.nome}}</h2>
-        <br>
-        <h4>Total a receber: <br>
-          R$ {{total_comissao}}0</h4>
+        <h3>Colaborador: {{user.nome}}</h3>
         <br>
 
         <a href="/vendas/{{user.id}}" class="btn btn-warning">Voltar</a>
@@ -60,7 +57,7 @@
 
             {% for obj in object_list %}
             <tr>
-              {% if user.id == obj.funcionario_id and obj.is_active%}
+              {% if obj.is_active and obj.is_paid == False%}
               <th scope="row">{{obj.id}}</th>
               <td>{{obj.nome_item}}</td>
               <td>{{obj.descricao_item}}</td>
@@ -80,6 +77,53 @@
 
 
     <div class="row text-center">
+      <h3 class="">Vendas Pagas</h3>
+    </div>
+
+
+    <div class="row">
+      <div class="table-responsive pt-2 pb-2">
+
+
+        <table class="table table-striped">
+          <thead class="text-center">
+            <tr>
+              <th scope="col">Id (Item)</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Descrição</th>
+              <th scope="col">Data da venda</th>
+              <th scope="col">Valor do Item</th>
+
+              <!-- <th scope="col">Comissão (R$)</th> -->
+
+            </tr>
+          </thead>
+          <tbody class="text-center">
+
+            {% for obj in object_list %}
+            <tr>
+              {% if obj.is_paid %}
+              <th scope="row">{{obj.id}}</th>
+              <td>{{obj.nome_item}}</td>
+              <td>{{obj.descricao_item}}</td>
+              <td>{{obj.data_venda}}</td>
+              <td>R$: {{obj.valor_venda}},00</td>
+
+
+
+
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <br><br>
+
+
+    <div class="row text-center">
       <h3 class="">Vendas Excluídas</h3>
     </div>
 
@@ -87,7 +131,6 @@
     <div class="row">
       <div class="table-responsive pt-2 pb-2">
 
-        <!-- {{dados.db.id}} <br> -->
 
         <table class="table table-striped">
           <thead class="text-center">
