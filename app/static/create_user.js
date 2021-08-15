@@ -23,6 +23,11 @@ $(document).ready(function () {
   $("#id_tipo").on("change", function () {
     var tipo = $("#id_tipo").val();
 
+    if (tipo == "HORISTA")
+    {
+      $('label[for="id_salario"]').text("Valor da hora")
+    }
+
     if (tipo == "COMISSIONADO") {
       $("#id_comissao").show();
       $('label[for="id_comissao"]').show();

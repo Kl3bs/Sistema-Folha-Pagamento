@@ -330,9 +330,6 @@ def rodar_folha(request):
     users = Funcionario.objects.filter(
         Q(is_active=True) & Q(data_pagamento=today))
 
-    # pontos = PontoFuncionario.objects.filter(
-    #     Q(is_active=True) & Q(data_ponto__lte= today))
-
 
     mes_atual = int(today.month)
     users.update(mes_pago=mes_atual)    
@@ -366,8 +363,10 @@ def mostrar_funcionarios(request):
 @csrf_exempt
 def aplicar_taxa(request, pk, value):
     funcionario = Funcionario.objects.filter(pk=pk)
+    val = (Funcionario.objects.get(pk=pk).total_a_receber) - value
     if request.is_ajax() and request.POST:
         funcionario.update(taxa_sindicato=value)
+        funcionario.update(total_a_receber=val)
         return render(request, 'sindicato/painel_sindicato.html')
     else:
         raise Http404
