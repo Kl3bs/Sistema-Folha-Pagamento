@@ -8,8 +8,8 @@ Custom manager pattern;
 Decorator pattern;
 Extract method;
 
-A maioria das atualizações foram feitas dentro da view e do model;
-Todas as funcionalidades estão implementadas;
+A maioria das atualizações foram feitas dentro da view e do model.
+Todas as funcionalidades estão implementadas.
 
 ## Installation (Venv)
 
