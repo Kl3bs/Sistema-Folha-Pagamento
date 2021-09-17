@@ -1,7 +1,7 @@
 # Sistema de Pagamento (Projeto de Software-UFAL)
 
 
-## adrões Implementados:
+## Padrões Implementados:
 
 Mixin pattern;
 Custom manager pattern;
