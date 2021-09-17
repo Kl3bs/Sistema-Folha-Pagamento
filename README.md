@@ -3,13 +3,17 @@
 
 ## Padrões Implementados:
 
-Mixin pattern;
+Mixin pattern; 
 Custom manager pattern;
 Decorator pattern;
 Extract method;
 
 A maioria das atualizações foram feitas dentro da view e do model.
 Todas as funcionalidades estão implementadas.
+
+## Obs:
+
+Todos os dados e padrões foram baseados no livro: Django Design Patterns and Best Practices
 
 ## Installation (Venv)
 
