@@ -1,6 +1,16 @@
 # Sistema de Pagamento (Projeto de Software-UFAL)
 
 
+## adrões Implementados:
+
+Mixin pattern;
+Custom manager pattern;
+Decorator pattern;
+Extract method;
+
+A maioria das atualizações foram feitas dentro da view e do model;
+Todas as funcionalidades estão implementadas;
+
 ## Installation (Venv)
 
 Esta aplicação necessita que o Python esteja instalado em sua máquina.
@@ -40,4 +50,7 @@ python manage.py runserver
 ```
 
 Acesse o endereço localhost:8000, para ver o projeto no browser.
+
+
+
 
