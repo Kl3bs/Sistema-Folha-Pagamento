@@ -1,6 +1,14 @@
 from .imports import *
 
 
+def getById(self, pk):
+    return self.objects.get(pk=pk)
+
+
+def filterById(self, pk):
+    return self.objects.filter(pk=pk)
+
+
 #* (CRUD) E MÉTODOS GERAIS
 def home(request):
     data = {}
@@ -48,44 +56,39 @@ def create(request):
 
 def view(requiest, pk):
     data = {}
-    data['db'] = Funcionario.objects.get(pk=pk)
-
+    data['db'] = getById(Funcionario, pk)
     return render(requiest, 'user/view.html', data)
 
 
 def edit(request, pk):
     data = {}
-    data['db'] = Funcionario.objects.get(pk=pk)
+    data['db'] = getById(Funcionario, pk)
     data['form'] = FuncionarioForm(instance=data['db'])
-
     return render(request, 'user/form.html', data)
 
 
 def update(request, pk):
     data = {}
-    data['db'] = Funcionario.objects.get(pk=pk)
+    data['db'] = getById(Funcionario, pk)
     form = FuncionarioForm(
         request.POST or None, instance=data['db']
     )  #Pega os dados do form e atualiza na instância 'db' (Banco de dados)
     if form.is_valid:
         form.save()
-
         return redirect('home')
 
 
 def delete(request, pk):
-    db = Funcionario.objects.get(pk=pk)
+    db = getById(Funcionario, pk)
     db.delete()
-
     return redirect('home')
 
 
 def desativar(request, pk):
-    Funcionario.objects.filter(pk=pk).update(is_active=False)
+    filterById(Funcionario, pk).update(is_active=False)
     return redirect('home')
 
 
 def reativar(request, pk):
-    Funcionario.objects.filter(pk=pk).update(is_active=True)
+    filterById(Funcionario, pk).update(is_active=True)
     return redirect('home')
-

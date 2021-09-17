@@ -1,7 +1,8 @@
+from django.db.models.expressions import Func
 from .imports import *
 from .general import *
 
- 
+
 def ponto(request, pk):
     data = {}
     data['db'] = Funcionario.objects.get(pk=pk)
@@ -36,7 +37,7 @@ def bater_ponto(request, pk):
 def ponto_info(request, pk):
     user = Funcionario.objects.get(pk=pk)
     #Proximo mes que o funcionario vai receber o pagamento
-    proximo_mes= int(user.data_pagamento.month)
+    proximo_mes = int(user.data_pagamento.month)
     #Atualiza os que já foram pagos
     query = (Q(funcionario_id=pk) & Q(mes_ponto__lte=proximo_mes))
 
@@ -65,13 +66,12 @@ def inserir_pagamento_hora(instance, pk):
     else:
         user.total_a_receber += (user.salario * instance.horas_trabalhadas)
 
-    Funcionario.objects.filter(pk=pk).update(
-        total_a_receber=user.total_a_receber)
+    filterById(Funcionario, pk).update(total_a_receber=user.total_a_receber)
 
 
 def remover_pagamento_hora(funcionario_id, pk):
     instance = PontoFuncionario.objects.get(pk=pk)
-    user = Funcionario.objects.get(pk=funcionario_id)
+    user = getById(Funcionario, pk)
 
     if instance.horas_trabalhadas > 8:
         #CALCULA O BONUS DE 1.5x
@@ -86,27 +86,23 @@ def remover_pagamento_hora(funcionario_id, pk):
         user.total_a_receber -= (user.salario * instance.horas_trabalhadas)
 
     result = user.total_a_receber
-    Funcionario.objects.filter(pk=funcionario_id).update(
-        total_a_receber=result)
+    filterById(Funcionario, funcionario_id).update(total_a_receber=result)
 
 
 def desativar_ponto(request, funcionario_id, pk):
     remover_pagamento_hora(funcionario_id, pk)
-    PontoFuncionario.objects.filter(pk=pk).update(is_active=False)
+    filterById(PontoFuncionario, pk).update(is_active=False)
     return ponto_info(request, funcionario_id)
 
 
 def reativar_ponto(request, funcionario_id, pk):
     instance = PontoFuncionario.objects.get(pk=pk)
-    funcionario = Funcionario.objects.get(pk=funcionario_id)
     inserir_pagamento_hora(instance, funcionario_id)
-    PontoFuncionario.objects.filter(pk=pk).update(is_active=True)
-        
+    filterById(PontoFuncionario, pk).update(is_active=True)
+
     return ponto_info(request, funcionario_id)
 
 
 def deletar_ponto(request, funcionario_id, pk):
-    ponto = PontoFuncionario.objects.get(pk=pk)
-    ponto.delete()
+    getById(PontoFuncionario, pk).delete()
     return ponto_info(request, funcionario_id)
-
