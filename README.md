@@ -30,7 +30,7 @@ Após ativar sua venv, execute o seguinte comando:
 pip install django
 ```
 
-## Executando o porjeto
+## Executando o projeto
 
 Volte para a pasta raiz do projeto pelo terminal e digite:
 ```sh
