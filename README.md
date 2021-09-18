@@ -64,7 +64,6 @@ Todos os dados e padrões foram baseados no livro: Django Design Patterns and Be
 ```py
 def getById(self, pk):
     return self.objects.get(pk=pk)
-    ...
 ```
 
 `vendas.py`:
@@ -75,7 +74,6 @@ def remover_pagamento_comissao(funcionario_id, pk):
     user.total_a_receber -= (instance.valor_venda * (user.comissao / 100))
     Funcionario.objects.filter(pk=funcionario_id).update(
         total_a_receber=user.total_a_receber)
-    ...
 ```
 
 
@@ -85,7 +83,6 @@ def remover_pagamento_comissao(funcionario_id, pk):
 ```py
 def filterById(self, pk):
     return self.objects.filter(pk=pk)
-    ...
 ```
 
 `general.py`:
@@ -98,8 +95,6 @@ def desativar(request, pk):
 def reativar(request, pk):
     filterById(Funcionario, pk).update(is_active=True)
     return redirect('home')
-
-    ...
 ```
 
  
@@ -115,7 +110,6 @@ def remover_pagamento_comissao(funcionario_id, pk):
     user.total_a_receber -= (instance.valor_venda * (user.comissao / 100))
     Funcionario.objects.filter(pk=funcionario_id).update(
         total_a_receber=user.total_a_receber)
-    ...
 ```
 
 ```py
@@ -123,7 +117,6 @@ def desativar_venda(request, funcionario_id, pk):
     remover_pagamento_comissao(funcionario_id, pk)
     Venda.objects.filter(pk=pk).update(is_active=False)
     return listar_vendas(request, funcionario_id)
-    ...
 ```
 
 - Muitos atributos semelhantes em classes, pattern aplicado (Mixin patter):
@@ -138,8 +131,6 @@ class CommonInfo(models.Model):
 
     class Meta:
         abstract = True
-
-    ...
 ```
 `ponto_funcionario_model.py`:
 ```py
@@ -149,8 +140,6 @@ class PontoFuncionario(CommonInfo):
     hora_saida = models.TimeField(null=True)
     horas_trabalhadas = models.IntegerField(null=True)
     mes_ponto = models.IntegerField(null=True)
-
-    ...
 ```
 
 `venda_funcionario_model.py`:
@@ -161,7 +150,7 @@ class Venda(CommonInfo):
     data_venda = models.DateField(null=True)
     valor_venda = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99999)])
     mes_venda = models.IntegerField(null=True)
-    ...
+
 ```
 
 - Segurança das requisições (Decorator pattern) :
@@ -178,7 +167,6 @@ def aplicar_taxa(request, pk, value):
         return render(request, 'sindicato/painel_sindicato.html')
     else:
         raise Http404
-    ...
 ```
 
 
