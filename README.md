@@ -58,7 +58,7 @@ Todos os dados e padrões foram baseados no livro: Django Design Patterns and Be
 
 ## Code Smells Encontrados
 
-- Comments: foi utilizado Custom Manager Pattern, onde cada "Manager" pudesser ser de fácil entendimento, excluindo a necessidade de comentários.
+- **Comments**: foi utilizado Custom Manager Pattern, onde cada "Manager" pudesser ser de fácil entendimento, excluindo a necessidade de comentários.
 
 `vendas.py`:
 ```py
@@ -85,7 +85,7 @@ def listar_vendas(request, pk):
 ```
 
 
-- Duplicate code: várias chamadas de filtragem em locais diversose e de difícil compreensão, pattern aplicado (Custom Manger):
+- **Duplicate code**: várias chamadas de filtragem em locais diversose e de difícil compreensão, pattern aplicado (Custom Manger):
 
 `general.py`:
 ```py
@@ -103,7 +103,7 @@ def desativar(request, pk):
 ```
 
 
-- Long method: Métodos extensos e complexos, pattern aplicado (Extract Method):
+- **Long method**: Métodos extensos e complexos, pattern aplicado (Extract Method):
 `vendas.py`:
 ```py
 def desativar_venda(request, funcionario_id, pk):
@@ -128,7 +128,7 @@ def desativar_venda(request, funcionario_id, pk):
 ```
 
 
-- Large class: muitos atributos semelhantes em classes diferentes, pattern aplicado (Mixin patter):
+- **Large class**: muitos atributos semelhantes em classes diferentes, pattern aplicado (Mixin patter):
 
 - Primeiramente foi criada a classe ```CommonInfo``` que abriga as semelhanças:
 `common_info_model.py`:
