@@ -56,61 +56,69 @@ Todas as funcionalidades estão implementadas.
 
 Todos os dados e padrões foram baseados no livro: Django Design Patterns and Best Practices.
 
-## Code Smells
+## Code Smells Encontrados
 
-- Várias chamadas baseadas na pk (Pirmary Key) em locais diversos, pattern aplicado (Custom Manger):
-
-`general.py`:
-```py
-def getById(self, pk):
-    return self.objects.get(pk=pk)
-```
+- Comments: foi utilizado Custom Manager Pattern, onde cada "Manager" pudesser ser de fácil entendimento, excluindo a necessidade de comentários.
 
 `vendas.py`:
 ```py
-def remover_pagamento_comissao(funcionario_id, pk):
-    instance = getById(Venda, pk)
-    user = getById(Funcionario, funcionario_id)
-    user.total_a_receber -= (instance.valor_venda * (user.comissao / 100))
-    Funcionario.objects.filter(pk=funcionario_id).update(
-        total_a_receber=user.total_a_receber)
+def listar_vendas(request, pk):
+    user = Funcionario.objects.get(pk=pk)
+
+    proximo_mes= int(user.data_pagamento.month)
+    #Atualiza os que já foram pagos
+    query = (Q(funcionario_id=pk) & Q(mes_venda__lte=proximo_mes))
+
+    if user.mes_pago:
+        Venda.objects.filter(query).update(is_paid=True)
+
 ```
 
-
-- Várias chamadas de filtragem em locais diversos, pattern aplicado (Custom Manger):
-
-`general.py`:
+`vendas.py (refactored)`:
 ```py
-def filterById(self, pk):
-    return self.objects.filter(pk=pk)
+def listar_vendas(request, pk):
+    user = getById(Funcionario, pk)
+    proximo_mes = int(user.data_pagamento.month) + 1
+    query = (Q(funcionario_id=pk) & Q(mes_venda__lte=proximo_mes))
+    if user.mes_pago:
+        filterById(Venda, query).update(is_paid=True)
 ```
+
+
+- Duplicate code: várias chamadas de filtragem em locais diversose e de difícil compreensão, pattern aplicado (Custom Manger):
 
 `general.py`:
 ```py
 def desativar(request, pk):
-    filterById(Funcionario, pk).update(is_active=False)
-    return redirect('home')
-
-
-def reativar(request, pk):
-    filterById(Funcionario, pk).update(is_active=True)
+    Funcionario.objects.filter(pk=pk).update(is_active=False)
     return redirect('home')
 ```
 
- 
+`general.py`:
 
-- Métodos extensos e complexos, pattern aplicado (Extract Method):
+```py
+def desativar(request, pk):
+    filterById(Funcionario, pk).update(is_active=False)
+    return redirect('home')
+```
 
 
+- Long method: Métodos extensos e complexos, pattern aplicado (Extract Method):
 `vendas.py`:
 ```py
-def remover_pagamento_comissao(funcionario_id, pk):
+def desativar_venda(request, funcionario_id, pk):
     instance = getById(Venda, pk)
     user = getById(Funcionario, funcionario_id)
     user.total_a_receber -= (instance.valor_venda * (user.comissao / 100))
     Funcionario.objects.filter(pk=funcionario_id).update(
         total_a_receber=user.total_a_receber)
+
+    Venda.objects.filter(pk=pk).update(is_active=False)
+    return listar_vendas(request, funcionario_id)
 ```
+
+`vendas.py`:
+
 
 ```py
 def desativar_venda(request, funcionario_id, pk):
@@ -119,8 +127,10 @@ def desativar_venda(request, funcionario_id, pk):
     return listar_vendas(request, funcionario_id)
 ```
 
-- Muitos atributos semelhantes em classes, pattern aplicado (Mixin patter):
 
+- Large class: muitos atributos semelhantes em classes diferentes, pattern aplicado (Mixin patter):
+
+- Primeiramente foi criada a classe ```CommonInfo``` que abriga as semelhanças:
 `common_info_model.py`:
 ```py
 class CommonInfo(models.Model):
@@ -132,6 +142,9 @@ class CommonInfo(models.Model):
     class Meta:
         abstract = True
 ```
+
+- Após a criação, as classes com atributos em commum têm uma relação com a classe ```CommonInfo``` .
+
 `ponto_funcionario_model.py`:
 ```py
 class PontoFuncionario(CommonInfo):
@@ -153,7 +166,7 @@ class Venda(CommonInfo):
 
 ```
 
-- Segurança das requisições (Decorator pattern) :
+- Também foi ousado o Decorator pattern, para lidar com as requisições feitas:
 
 `common_info_model.py`:
 ```py
@@ -169,9 +182,20 @@ def aplicar_taxa(request, pk, value):
         raise Http404
 ```
 
+- Além disso, todo o código foi separado por tipo, anteriormente existia um arquivo único para as ```views```  e ```models```:
+
+- Estrutura antiga:
+
+![alt text](https://firebasestorage.googleapis.com/v0/b/teste-e6f39.appspot.com/o/old.PNG?alt=media&token=9d11d2a8-475b-48e7-81c2-0a31e540ab45)
+
+- Estrutura atual (Model):
+ ![alt text](https://firebasestorage.googleapis.com/v0/b/teste-e6f39.appspot.com/o/new%20model.PNG?alt=media&token=59d238dd-cd52-4238-b471-c214f3e2080f)
 
 
+- Estrutura atual (View):
+ ![alt text](https://firebasestorage.googleapis.com/v0/b/teste-e6f39.appspot.com/o/new%20view.PNG?alt=media&token=b20766f5-5c80-44fe-b8fd-c8dfe4a49f71)
 
-
+ 
+ 
 
 
