@@ -14,8 +14,8 @@ def ponto(request, pk):
 def bater_ponto(request, pk):
 
     today = pendulum.today()
-    form = PontoForm(request.POST or None)  #DADOS QUE VÊM DO FORMULARIO
-    if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
+    form = PontoForm(request.POST or None)
+    if form.is_valid():
         instance = form.save()
         instance.is_active = True
         instance.funcionario_id = pk
@@ -36,9 +36,7 @@ def bater_ponto(request, pk):
 
 def ponto_info(request, pk):
     user = Funcionario.objects.get(pk=pk)
-    #Proximo mes que o funcionario vai receber o pagamento
     proximo_mes = int(user.data_pagamento.month)
-    #Atualiza os que já foram pagos
     query = (Q(funcionario_id=pk) & Q(mes_ponto__lte=proximo_mes))
 
     if user.mes_pago:
@@ -57,9 +55,7 @@ def ponto_info(request, pk):
 def inserir_pagamento_hora(instance, pk):
     user = Funcionario.objects.get(pk=pk)
 
-    #CALCULA O VALOR A RECEBER ()
     if instance.horas_trabalhadas > 8:
-        #CALCULA O BONUS DE 1.5x
         excedente = (instance.horas_trabalhadas - 8)
         bonus = (excedente * 1.5) * 10
         user.total_a_receber += (user.salario * 8) + bonus
@@ -71,10 +67,9 @@ def inserir_pagamento_hora(instance, pk):
 
 def remover_pagamento_hora(funcionario_id, pk):
     instance = PontoFuncionario.objects.get(pk=pk)
-    user = getById(Funcionario, pk)
+    user = getById(Funcionario, funcionario_id)
 
     if instance.horas_trabalhadas > 8:
-        #CALCULA O BONUS DE 1.5x
         excedente = (instance.horas_trabalhadas - 8)
         bonus = (excedente * 1.5) * 10
         calc = (user.salario * 8) + bonus

@@ -13,8 +13,7 @@ def nova_venda(request, pk):
     user = getById(Funcionario, pk)
     form = VendaForm(request.POST or None)
     today = pendulum.today()
-    #DADOS QUE VÊM DO FORMULARIO
-    if form.is_valid():  #VERIFICA SE TUDO É VÁLIDO
+    if form.is_valid():
         instance = form.save()
         instance.funcionario_id = pk
         instance.is_active = True
@@ -29,17 +28,13 @@ def nova_venda(request, pk):
 
 def listar_vendas(request, pk):
     user = getById(Funcionario, pk)
-
     proximo_mes = int(user.data_pagamento.month) + 1
-    #Atualiza os que já foram pagos
     query = (Q(funcionario_id=pk) & Q(mes_venda__lte=proximo_mes))
-
     if user.mes_pago:
-        Venda.objects.filter(query).update(is_paid=True)
+        filterById(Venda, query).update(is_paid=True)
 
     queryset = Venda.objects.all()
 
-    #* SOMA TODOS AS VENDAS DO FUNCIONARIO, MULTIPLICA PELA TAXA DE COMISSAO E RETORNA O RESULTADO
     total_comissao = list(
         Venda.objects.filter(funcionario_id__exact=pk).aggregate(
             Sum('valor_venda')).values())[0] * (user.comissao / 100)
