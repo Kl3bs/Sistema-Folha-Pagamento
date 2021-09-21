@@ -123,7 +123,7 @@ def desativar_venda(request, funcionario_id, pk):
 ```py
 def desativar_venda(request, funcionario_id, pk):
     remover_pagamento_comissao(funcionario_id, pk)
-    Venda.objects.filter(pk=pk).update(is_active=False)
+    filterById(Venda, pk).update(is_active=False)
     return listar_vendas(request, funcionario_id)
 ```
 
