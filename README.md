@@ -197,10 +197,12 @@ def aplicar_taxa(request, pk, value):
 ![alt text](https://firebasestorage.googleapis.com/v0/b/teste-e6f39.appspot.com/o/old.PNG?alt=media&token=9d11d2a8-475b-48e7-81c2-0a31e540ab45)
 
 - Estrutura atual (Model):
+ 
  ![alt text](https://firebasestorage.googleapis.com/v0/b/teste-e6f39.appspot.com/o/new%20model.PNG?alt=media&token=59d238dd-cd52-4238-b471-c214f3e2080f)
 
 
 - Estrutura atual (View):
+ 
  ![alt text](https://firebasestorage.googleapis.com/v0/b/teste-e6f39.appspot.com/o/new%20view.PNG?alt=media&token=b20766f5-5c80-44fe-b8fd-c8dfe4a49f71)
 
  
