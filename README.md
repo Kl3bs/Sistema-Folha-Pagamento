@@ -87,14 +87,14 @@ def listar_vendas(request, pk):
 
 - **Duplicate code**: várias chamadas de filtragem em locais diversose e de difícil compreensão, pattern aplicado (Custom Manger):
 
-`general.py`:
+`views.py`:
 ```py
 def desativar(request, pk):
     Funcionario.objects.filter(pk=pk).update(is_active=False)
     return redirect('home')
 ```
 
-`general.py`:
+`general.py (refactored)`:
 
 ```py
 def desativar(request, pk):
@@ -117,7 +117,7 @@ def desativar_venda(request, funcionario_id, pk):
     return listar_vendas(request, funcionario_id)
 ```
 
-`vendas.py`:
+`vendas.py (refactored)`:
 
 
 ```py
@@ -131,6 +131,7 @@ def desativar_venda(request, funcionario_id, pk):
 - **Large class**: muitos atributos semelhantes em classes diferentes, pattern aplicado (Mixin patter):
 
 - Primeiramente foi criada a classe ```CommonInfo``` que abriga as semelhanças:
+ 
 `common_info_model.py`:
 ```py
 class CommonInfo(models.Model):
@@ -145,6 +146,23 @@ class CommonInfo(models.Model):
 
 - Após a criação, as classes com atributos em commum têm uma relação com a classe ```CommonInfo``` .
 
+`models.py`:
+```py
+class PontoFuncionario(models.Model):
+    funcionario = models.ForeignKey(Funcionario,
+                                    on_delete=models.CASCADE,
+                                    blank=True,
+                                    null=True)
+    data_ponto = models.DateField(null=True)
+    hora_entrada = models.TimeField(null=True)
+    hora_saida = models.TimeField(null=True)
+    horas_trabalhadas = models.IntegerField(null=True)
+    is_active = models.BooleanField(null=True)
+    mes_ponto = models.IntegerField(null=True)
+    is_paid = models.BooleanField(null=True)
+
+```
+
 `ponto_funcionario_model.py`:
 ```py
 class PontoFuncionario(CommonInfo):
@@ -155,16 +173,6 @@ class PontoFuncionario(CommonInfo):
     mes_ponto = models.IntegerField(null=True)
 ```
 
-`venda_funcionario_model.py`:
-```py
-class Venda(CommonInfo):
-    nome_item = models.CharField(max_length=30)
-    descricao_item = models.CharField(max_length=1000)
-    data_venda = models.DateField(null=True)
-    valor_venda = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99999)])
-    mes_venda = models.IntegerField(null=True)
-
-```
 
 - Também foi ousado o Decorator pattern, para lidar com as requisições feitas:
 
@@ -182,7 +190,7 @@ def aplicar_taxa(request, pk, value):
         raise Http404
 ```
 
-- Além disso, todo o código foi separado por tipo, anteriormente existia um arquivo único para as ```views```  e ```models```:
+- Além disso, todo o código foi separado por tipo e/ou função, anteriormente existia um arquivo único para as ```views```  e ```models```:
 
 - Estrutura antiga:
 
