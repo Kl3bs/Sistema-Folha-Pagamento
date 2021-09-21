@@ -21,9 +21,9 @@ def nova_venda(request, pk):
         calculo_comissao = (instance.valor_venda * (user.comissao / 100))
         total = user.total_a_receber + calculo_comissao
         instance.mes_venda = int(today.month)
-        Funcionario.objects.filter(pk=pk).update(total_a_receber=total)
+        filterById(Funcionario, pk).update(total_a_receber=total)
         instance.save()
-        return redirect('home')  #*REDIRECIONA PARA A HOME
+        return redirect('home')
 
 
 def listar_vendas(request, pk):
@@ -52,8 +52,8 @@ def remover_pagamento_comissao(funcionario_id, pk):
     instance = getById(Venda, pk)
     user = getById(Funcionario, funcionario_id)
     user.total_a_receber -= (instance.valor_venda * (user.comissao / 100))
-    Funcionario.objects.filter(pk=funcionario_id).update(
-        total_a_receber=user.total_a_receber)
+    filterById(Funcionario,
+               funcionario_id).update(total_a_receber=user.total_a_receber)
 
 
 def inserir_pagamento_comissao(funcionario_id, pk):
@@ -66,11 +66,11 @@ def inserir_pagamento_comissao(funcionario_id, pk):
 
 def desativar_venda(request, funcionario_id, pk):
     remover_pagamento_comissao(funcionario_id, pk)
-    Venda.objects.filter(pk=pk).update(is_active=False)
+    filterById(Funcionario, pk).update(is_active=False)
     return listar_vendas(request, funcionario_id)
 
 
 def reativar_venda(request, funcionario_id, pk):
     inserir_pagamento_comissao(funcionario_id, pk)
-    Venda.objects.filter(pk=pk).update(is_active=True)
+    filterById(Funcionario, pk).update(is_active=True)
     return listar_vendas(request, funcionario_id)
