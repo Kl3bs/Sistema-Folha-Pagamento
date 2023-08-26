@@ -1,43 +1,55 @@
-# Sistema de Pagamento (Projeto de Software-UFAL)
+# Sistema de Pagamento 💰 (Projeto de Software - UFAL)
 
+## Tecnologias Utilizadas 🚀
 
-## Installation (Venv)
+Este projeto foi desenvolvido utilizando as seguintes tecnologias:
 
-Esta aplicação necessita que o Python esteja instalado em sua máquina.
+- Bootstrap 🎨
+- jQuery 📜
+- SQLite 🗄️
 
-Após clonar o projeto, navegue até a pasta dele e abra a pasta raiz do projeto com o terminal e digite o comando a seguir:
-```sh
+## Instalação (Venv) ⚙️
+
+Esta aplicação requer a instalação do Python em sua máquina.
+
+Após clonar o projeto, navegue até a sua pasta raiz por meio do terminal e execute o seguinte comando:
+
+\```sh
 python -m venv venv
-```
+\```
 
+## Ativando o ambiente virtual (Windows) 💻
 
-## Ativando sua venv (Windows)
+Navegue até a pasta /venv/Scripts e, em seguida, execute o comando:
 
-Navegue até /venv/Scripts, em seguida basta digitar o comando "./activate" (Sem aspas);
- 
-## Ativando sua venv (MacOS)
+\```sh
+./activate
+\```
 
-Na raiz do projeto, digite: 
+## Ativando o ambiente virtual (MacOS) 🍏
 
-```sh
+Na raiz do projeto, digite:
+
+\```sh
 source venv/bin/activate
-```
- 
-## Instalando o django
+\```
 
-Após ativar sua venv, execute o seguinte comando:
-```sh
+## Instalando o Django 🌐
+
+Após ativar o ambiente virtual, execute o seguinte comando:
+
+\```sh
 pip install django
-```
+\```
 
-## Executando o projeto
+## Executando o projeto ▶️
 
-Volte para a pasta raiz do projeto pelo terminal e digite:
-```sh
+Volte para a pasta raiz do projeto no terminal e digite os seguintes comandos:
+
+\```sh
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
-```
+\```
 
-Acesse o endereço localhost:8000, para ver o projeto no browser.
-
+Acesse o endereço http://localhost:8000 no seu navegador para visualizar o projeto. 🌐
